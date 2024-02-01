@@ -73,3 +73,4 @@ crashlytics-build.properties
 Unity/.idea
 Unity/HybridCLRData
 Unity/Assets/HybridCLRGenerate
+Unity/Assets/StreamingAssets
