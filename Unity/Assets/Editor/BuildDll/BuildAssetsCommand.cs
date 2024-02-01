@@ -35,58 +35,18 @@ namespace HybridCLR.Editor
         public static void BuildAndCopyABAOTHotUpdateDlls()
         {
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-            BuildAssetBundleByTarget(target);
             CompileDllCommand.CompileDll(target);
-            CopyABAOTHotUpdateDlls(target);
+            CopyAssembliesDlls();
         }
         
-        public static void BuildAssetBundleByTarget(BuildTarget target)
-        {
-            BuildAssetBundles(GetAssetBundleTempDirByTarget(target), GetAssetBundleOutputDirByTarget(target), target);
-        }
         
-        /// <summary>
-        /// 将HotFix.dll和HotUpdatePrefab.prefab打入common包.
-        /// 将HotUpdateScene.unity打入scene包.
-        /// </summary>
-        /// <param name="tempDir"></param>
-        /// <param name="outputDir"></param>
-        /// <param name="target"></param>
-        private static void BuildAssetBundles(string tempDir, string outputDir, BuildTarget target)
-        {
-            Directory.CreateDirectory(tempDir);
-            Directory.CreateDirectory(outputDir);
-            
-            List<AssetBundleBuild> abs = new List<AssetBundleBuild>();
-
-            {
-                var prefabAssets = new List<string>();
-                string testPrefab = $"{Application.dataPath}/Prefabs/Cube.prefab";
-                prefabAssets.Add(testPrefab);
-                AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-                abs.Add(new AssetBundleBuild
-                {
-                    assetBundleName = "prefabs",
-                    assetNames = prefabAssets.Select(s => ToRelativeAssetPath(s)).ToArray(),
-                });
-            }
-
-            BuildPipeline.BuildAssetBundles(outputDir, abs.ToArray(), BuildAssetBundleOptions.None, target);
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-        }
-        
-        public static void CopyABAOTHotUpdateDlls(BuildTarget target)
-        {
-            CopyAssetBundlesToStreamingAssets(target);
-            CopyAOTAssembliesToStreamingAssets();
-            CopyHotUpdateAssembliesToStreamingAssets();
-        }
 
         [MenuItem("HybridCLR/Build/CopyAssembliesDlls")]
         public static void CopyAssembliesDlls()
         {
             CopyAOTAssembliesToStreamingAssets();
             CopyHotUpdateAssembliesToStreamingAssets();
+            AssetDatabase.Refresh();
         }
         
 
@@ -95,6 +55,7 @@ namespace HybridCLR.Editor
             var target = EditorUserBuildSettings.activeBuildTarget;
             string aotAssembliesSrcDir = SettingsUtil.GetAssembliesPostIl2CppStripDir(target);
             string aotAssembliesDstDir = Application.streamingAssetsPath;
+            string scriptResPath = Application.dataPath + "/Res/Src";
             if (!Directory.Exists(Application.streamingAssetsPath))
             {
                 Directory.CreateDirectory(Application.streamingAssetsPath);
@@ -109,7 +70,9 @@ namespace HybridCLR.Editor
                     continue;
                 }
                 string dllBytesPath = $"{aotAssembliesDstDir}/{dll}.dll.bytes";
+                string dllBytesResPath = $"{scriptResPath}/{dll}.dll.bytes";
                 File.Copy(srcDllPath, dllBytesPath, true);
+                File.Copy(srcDllPath, dllBytesResPath, true);
                 Debug.Log($"[CopyAOTAssembliesToStreamingAssets] copy AOT dll {srcDllPath} -> {dllBytesPath}");
             }
         }
@@ -119,16 +82,13 @@ namespace HybridCLR.Editor
             var target = EditorUserBuildSettings.activeBuildTarget;
 
             string hotfixDllSrcDir = SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target);
-            string hotfixAssembliesDstDir = Application.streamingAssetsPath;
             string scriptResPath = Application.dataPath + "/Res/Src";
             foreach (var dll in SettingsUtil.HotUpdateAssemblyFilesExcludePreserved)
             {
                 string dllPath = $"{hotfixDllSrcDir}/{dll}";
-                string dllBytesPath = $"{hotfixAssembliesDstDir}/{dll}.bytes";
                 string dllBytesResPath = $"{scriptResPath}/{dll}.bytes";
-                File.Copy(dllPath, dllBytesPath, true);
                 File.Copy(dllPath, dllBytesResPath, true);
-                Debug.Log($"[CopyHotUpdateAssembliesToStreamingAssets] copy hotfix dll {dllPath} -> {dllBytesPath}");
+                Debug.Log($"[CopyHotUpdateAssembliesToStreamingAssets] copy hotfix dll {dllPath} -> {dllBytesResPath}");
             }
         }
         
