@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "6ffb977ef31eb20ab1824f92174fc6e891209401"
     },
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "64792b672d35e43b3412fc74861f8bdbf41e3a6f"
+    },
     "com.tuyoogame.yooasset": {
       "version": "2.1.1",
       "depth": 0,
