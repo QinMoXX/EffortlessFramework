@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NavMesh.DataStructure
+namespace DataStructure
 {
-    public struct PriorityQueue<TElement,TPriority> where TPriority :IComparable<TPriority>
+    public class PriorityQueue<TElement,TPriority> where TPriority :IComparable<TPriority>
     {
         private bool fix; //定容队列
         private int capacity;
         private ValueTuple<TElement, TPriority>[] _heap;
+        private TElement[] _array;//顺序数组缓存
 
         private int _count;
 
@@ -22,6 +23,7 @@ namespace NavMesh.DataStructure
             _count = 0;
             this.capacity = capacity;
             this.fix = fix;
+            this._array = new TElement[_count];
         }
 
         public bool IsEmpty()
@@ -33,11 +35,17 @@ namespace NavMesh.DataStructure
         {
             get => _count;
         }
+
+        public TElement[] List
+        {
+            get => this._array;
+        }
         
         public void Clear()
         {
             _heap = new (TElement, TPriority)[capacity];
             _count = 0;
+            this._array = Array.Empty<TElement>();
         }
 
         public TElement Dequeue()
@@ -50,8 +58,20 @@ namespace NavMesh.DataStructure
             {
                 Array.Resize(ref _heap, _heap.Length / 2);
             }
-            
+
+            RefrashCache();
             return max.Item1;
+        }
+
+        //刷新数组缓存
+        private void RefrashCache()
+        {
+            _array = new TElement[_count];
+
+            for (int i = 0; i < _count; i++)
+            {
+                _array[i] = _heap[i].Item1;
+            }
         }
 
         public void Enqueue(TElement item, TPriority priority)
@@ -68,6 +88,7 @@ namespace NavMesh.DataStructure
 
             _heap[++_count] = (item, priority);
             Swim(_count);
+            RefrashCache();
         }
 
         /// <summary>
