@@ -10,7 +10,7 @@ namespace Framework
     /// </summary>
     public static class GameEntry
     {
-        private static readonly PriorityQueue<IGameModule, uint> _GameModule = new PriorityQueue<IGameModule, uint>();
+        private static readonly PriorityQueue<IGameModule, Int16> _GameModule = new PriorityQueue<IGameModule, Int16>();
         
         /// <summary>
         /// 所有游戏框架模块轮询。
@@ -32,7 +32,7 @@ namespace Framework
         {
             foreach (IGameModule module in _GameModule.List)
             {
-                module.Exit();
+                module.Destroy();
             }
             _GameModule.Clear();
         }
@@ -72,20 +72,16 @@ namespace Framework
 
             return null;
         }
+        
 
         /// <summary>
         /// 创建模块
         /// </summary>
-        /// <param name="moduleType"></param>
-        /// <returns></returns>
-        /// <exception cref="GameFrameworkException"></exception>
-        public static IGameModule CreatModule(Type moduleType)
+        /// <typeparam name="T">模块类型</typeparam>
+        /// <returns>返回已创建模块</returns>
+        public static IGameModule CreatModule<T>() where T:class,IGameModule, new()
         {
-            IGameModule module = Activator.CreateInstance(moduleType) as IGameModule;
-            if (module == null)
-            {
-                throw new GameFrameworkException(Utility.String.Format("Can not create module '{0}'.",moduleType.FullName));
-            }
+            IGameModule module = new T();
             _GameModule.Enqueue(module, module.Priority);
             module.Init();
             return module;

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Framework;
 using UnityEngine;
 
 namespace Src.AOT.Framework.Fsm
 {
-    public sealed partial class FsmManager
+    public sealed class FsmManager:IGameModule
     {
 
         private readonly Dictionary<string, FsmBase> m_Fsms;
@@ -22,6 +23,13 @@ namespace Src.AOT.Framework.Fsm
             get => m_Fsms.Count;
         }
 
+        public short Priority => 1;
+
+        public void Init()
+        {
+            
+        }
+
         public void Update(float elapseSeconds, float realElapseSeconds)
         {
             
@@ -34,6 +42,12 @@ namespace Src.AOT.Framework.Fsm
                 (fsm as IFsm).Update(elapseSeconds,realElapseSeconds);
             }
         }
+
+        public void Destroy()
+        {
+            Shutdown();
+        }
+        
 
         public void Shutdown()
         {
@@ -102,6 +116,8 @@ namespace Src.AOT.Framework.Fsm
             m_FsmsCache.Remove(fsm);
             return true;
         }
+
+
     }
 
 }

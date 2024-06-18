@@ -62,7 +62,7 @@ namespace Src.AOT.Framework.Fsm
       /// </summary>
       /// <typeparam name="TState">获取的状态类型</typeparam>
       /// <returns>获取的状态</returns>
-      public FsmStateBase GetState<TState>() where TState : FsmStateBase;
+      public TState GetState<TState>() where TState : FsmStateBase;
 
       /// <summary>
       /// 获取有限状态机状态
@@ -191,9 +191,9 @@ namespace Src.AOT.Framework.Fsm
         return true;
       }
 
-      public FsmStateBase GetState<TState>() where TState : FsmStateBase
+      public TState GetState<TState>() where TState : FsmStateBase
       {
-        return GetState(typeof(TState));
+        return GetState(typeof(TState)) as TState;
       }
 
       public FsmStateBase GetState(Type stateType)

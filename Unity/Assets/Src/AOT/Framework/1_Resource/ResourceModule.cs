@@ -8,8 +8,8 @@ namespace Src.AOT.Framework.Resource
 {
     public partial class ResourceManager:IGameModule
     {
-        internal ResourceRunningMode Mode = ResourceRunningMode.EDITOR; 
-        public uint Priority { get => 1; }
+        internal ResourceRunningMode Mode = ResourceRunningMode.EDITOR;
+        public short Priority => 1;
         public void Init()
         {
             // 初始化资源系统
@@ -80,6 +80,7 @@ namespace Src.AOT.Framework.Resource
             // {
             //     Debug.LogError($"资源包初始化失败：{initOperation.Error}");
             // }
+            return UniTask.CompletedTask;
         }
 
 
@@ -95,6 +96,11 @@ namespace Src.AOT.Framework.Resource
 
         
         public void Update(float virtualElapse, float realElapse)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Destroy()
         {
             throw new System.NotImplementedException();
         }

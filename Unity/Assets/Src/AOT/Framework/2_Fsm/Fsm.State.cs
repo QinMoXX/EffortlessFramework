@@ -18,7 +18,7 @@ namespace Src.AOT.Framework.Fsm
 
         protected internal abstract void OnLeave();
 
-        protected internal virtual void OnDestroy()
+        protected virtual void OnDestroy()
         {
             this.m_fsmHandle = null;
         }
