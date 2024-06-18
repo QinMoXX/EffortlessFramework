@@ -10,26 +10,38 @@ namespace Src.AOT.Framework.Resource
     {
         internal ResourceRunningMode Mode = ResourceRunningMode.EDITOR;
         public short Priority => 1;
+
+        public ResourcePackage defaultPackage;
+        public void Update(float virtualElapse, float realElapse)
+        {
+            
+        }
+
+        public void Destroy()
+        {
+            YooAssets.Destroy();
+        }
+
         public void Init()
         {
             // 初始化资源系统
             YooAssets.Initialize();
             // 创建默认的资源包
-            var package = YooAssets.CreatePackage("DefaultPackage");
+            defaultPackage = YooAssets.CreatePackage("DefaultPackage");
             // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
-            YooAssets.SetDefaultPackage(package);
+            YooAssets.SetDefaultPackage(defaultPackage);
             if (Mode == ResourceRunningMode.STANDALONE)
             {
-                InitializeYooAssetForStandaloneMode(package);
+                InitializeYooAssetForStandaloneMode(defaultPackage);
             }
             else if (Mode == ResourceRunningMode.ONLINE)
             {
-                InitializeYooAsset(package);
+                InitializeYooAsset(defaultPackage);
             }
 #if UNITY_EDITOR
             else if(Mode == ResourceRunningMode.EDITOR)
             {
-                InitializeYooAssetForEditorMode(package);
+                InitializeYooAssetForEditorMode(defaultPackage);
             }
 #endif
         }
@@ -83,26 +95,22 @@ namespace Src.AOT.Framework.Resource
             return UniTask.CompletedTask;
         }
 
-
-        public void Entry()
+        public async UniTask<string> GetUpdatePackageVersion()
         {
-            throw new System.NotImplementedException();
-        }
+            var package = YooAssets.GetPackage("DefaultPackage");
+            var operation = package.UpdatePackageVersionAsync();
+            await operation;
+            if (operation.Status == EOperationStatus.Succeed)
+            {
+                //更新成功
+                string packageVersion = operation.PackageVersion;
+                return packageVersion;
+            }
 
-        public void Exit()
-        {
-            throw new System.NotImplementedException();
+            //更新失败
+            Debug.LogError(operation.Error);
+            return string.Empty;
         }
-
-        
-        public void Update(float virtualElapse, float realElapse)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Destroy()
-        {
-            throw new System.NotImplementedException();
-        }
+            
     }
 }
