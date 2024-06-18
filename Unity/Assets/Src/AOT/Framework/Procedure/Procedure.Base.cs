@@ -1,7 +1,18 @@
-﻿namespace Src.AOT.Framework.Procedure
+﻿using Src.AOT.Framework.Fsm;
+
+namespace Src.AOT.Framework.Procedure
 {
-    public class Procedure_Base
+    public sealed class ProcedureFsm:FsmBase
     {
         
     }
+
+    public abstract class ProcedureBase : FsmStateBase
+    {
+        protected ProcedureBase(IFsm handle) : base(handle)
+        {
+            
+        }
+        
+    } 
 }
