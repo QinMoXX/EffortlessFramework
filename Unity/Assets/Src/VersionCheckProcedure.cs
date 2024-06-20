@@ -5,6 +5,7 @@ using Framework;
 using Src.AOT.Framework.Fsm;
 using Src.AOT.Framework.Procedure;
 using Src.AOT.Framework.Resource;
+using UnityEngine;
 
 namespace Src
 {
@@ -23,22 +24,24 @@ namespace Src
 
         protected override async void OnEnter()
         {
-            packageVersion = string.Empty;
-            packageVersion = await GameEntry.GetModule<ResourceManager>().GetUpdatePackageVersion();
+            // packageVersion = string.Empty;
+            // packageVersion = await GameEntry.GetModule<ResourceManager>().GetUpdatePackageVersion();
+            Debug.Log("VersionCheckProcedure OnEnter");
         }
 
         protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            if (packageVersion == string.Empty)
-            {
-                return;
-            }
-            
+            Debug.Log("VersionCheckProcedure OnUpdate");
+            // if (packageVersion == string.Empty)
+            // {
+            //     return;
+            // }
+            this.ChangeState<DownloadProcedure>();
         }
 
         protected override void OnLeave()
         {
-            
+            Debug.Log("VersionCheckProcedure OnLeave");
         }
     }
 }

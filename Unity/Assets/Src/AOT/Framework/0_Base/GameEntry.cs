@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DataStructure;
 using GameFramework;
@@ -10,7 +11,7 @@ namespace Framework
     /// </summary>
     public static class GameEntry
     {
-        private static readonly PriorityQueue<IGameModule, Int16> _GameModule = new PriorityQueue<IGameModule, Int16>();
+        private static readonly SortedList<Int16, IGameModule> _GameModule = new SortedList<short, IGameModule>();
         
         /// <summary>
         /// 所有游戏框架模块轮询。
@@ -19,7 +20,7 @@ namespace Framework
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         public static void Update(float elapseSeconds, float realElapseSeconds)
         {
-            foreach (IGameModule module in _GameModule.List)
+            foreach (IGameModule module in _GameModule.Values)
             {
                 module.Update(elapseSeconds, realElapseSeconds);
             }
@@ -30,7 +31,7 @@ namespace Framework
         /// </summary>
         public static void Exit()
         {
-            foreach (IGameModule module in _GameModule.List)
+            foreach (IGameModule module in _GameModule.Values)
             {
                 module.Destroy();
             }
@@ -44,7 +45,7 @@ namespace Framework
         /// <returns></returns>
         public static T GetModule<T>() where T : class, IGameModule
         {
-            foreach (IGameModule module  in _GameModule.List)
+            foreach (IGameModule module  in _GameModule.Values)
             {
                 if (module.GetType() == typeof(T))
                 {
@@ -62,7 +63,7 @@ namespace Framework
         /// <returns></returns>
         public static IGameModule GetModule(Type moduleType)
         {
-            foreach (IGameModule module in _GameModule.List)
+            foreach (IGameModule module in _GameModule.Values)
             {
                 if (module.GetType() == moduleType)
                 {
@@ -82,7 +83,7 @@ namespace Framework
         public static IGameModule CreatModule<T>() where T:class,IGameModule, new()
         {
             IGameModule module = new T();
-            _GameModule.Enqueue(module, module.Priority);
+            _GameModule.Add( module.Priority,module);
             module.Init();
             return module;
         }

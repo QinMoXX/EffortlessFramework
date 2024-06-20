@@ -12,9 +12,9 @@ public class Mian : MonoBehaviour
 {
     private void Awake()
     {
-        GameEntry.CreatModule<ResourceManager>();
         GameEntry.CreatModule<FsmManager>();
         GameEntry.CreatModule<ProcedureManager>();
+        GameEntry.CreatModule<ResourceManager>();
     }
 
     // Start is called before the first frame update
@@ -29,6 +29,6 @@ public class Mian : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        GameEntry.Update(Time.deltaTime, Time.deltaTime);
     }
 }

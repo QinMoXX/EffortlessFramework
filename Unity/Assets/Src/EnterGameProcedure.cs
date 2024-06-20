@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Src.AOT.Framework.Fsm;
 using Src.AOT.Framework.Procedure;
+using UnityEngine;
 
 namespace Src
 {
@@ -8,26 +9,27 @@ namespace Src
     {
         public EnterGameProcedure(IFsm handle) : base(handle)
         {
+            
         }
 
         protected override void OnInit()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("EnterGameProcedure OnInit");
         }
 
         protected override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("EnterGameProcedure OnEnter");
         }
 
         protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            throw new System.NotImplementedException();
+            Debug.Log("EnterGameProcedure OnUpdate");
         }
 
         protected override void OnLeave()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("EnterGameProcedure OnLeave");
         }
     }
 }
