@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Src.AOT.Framework.Procedure;
 
 namespace Src.AOT.Framework.Fsm
 {
@@ -264,7 +265,7 @@ namespace Src.AOT.Framework.Fsm
             throw new Exception("FSM states is invalid.");
           }
 
-          if (!stateType.IsAssignableFrom(typeof(FsmStateBase)))
+          if (!stateType.IsSubclassOf(typeof(FsmStateBase)))
           {
             throw new Exception("Fsm state type is invalid.");
           }
