@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using DataStructure;
-using GameFramework;
 
 namespace Framework
 {
@@ -11,8 +9,9 @@ namespace Framework
     /// </summary>
     public static class GameEntry
     {
-        private static readonly SortedList<Int16, IGameModule> _GameModule = new SortedList<short, IGameModule>();
+        private static readonly SortList<Int16, IGameModule> _GameModule = new SortList<short, IGameModule>();
         
+        // ReSharper disable Unity.PerformanceAnalysis
         /// <summary>
         /// 所有游戏框架模块轮询。
         /// </summary>
@@ -20,9 +19,9 @@ namespace Framework
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         public static void Update(float elapseSeconds, float realElapseSeconds)
         {
-            foreach (IGameModule module in _GameModule.Values)
+            foreach (var keyValue in _GameModule.List)
             {
-                module.Update(elapseSeconds, realElapseSeconds);
+                keyValue.Item2.Update(elapseSeconds, realElapseSeconds);
             }
         }
 
@@ -31,9 +30,9 @@ namespace Framework
         /// </summary>
         public static void Exit()
         {
-            foreach (IGameModule module in _GameModule.Values)
+            foreach (var keyValue in _GameModule.List)
             {
-                module.Destroy();
+                keyValue.Item2?.Destroy();
             }
             _GameModule.Clear();
         }
@@ -45,11 +44,11 @@ namespace Framework
         /// <returns></returns>
         public static T GetModule<T>() where T : class, IGameModule
         {
-            foreach (IGameModule module  in _GameModule.Values)
+            foreach (var keyValue in _GameModule.List)
             {
-                if (module.GetType() == typeof(T))
+                if (keyValue.Item2.GetType() == typeof(T))
                 {
-                    return module as T;
+                    return keyValue.Item2 as T;
                 }
             }
 
@@ -63,11 +62,11 @@ namespace Framework
         /// <returns></returns>
         public static IGameModule GetModule(Type moduleType)
         {
-            foreach (IGameModule module in _GameModule.Values)
+            foreach (var keyValue in _GameModule.List)
             {
-                if (module.GetType() == moduleType)
+                if (keyValue.Item2.GetType() == moduleType)
                 {
-                    return module;
+                    return keyValue.Item2;
                 }
             }
 
