@@ -265,7 +265,7 @@ namespace Src.AOT.Framework.Fsm
             throw new Exception("FSM states is invalid.");
           }
 
-          if (!stateType.IsSubclassOf(typeof(FsmStateBase)))
+          if (!typeof(FsmStateBase).IsAssignableFrom(stateType))
           {
             throw new Exception("Fsm state type is invalid.");
           }
