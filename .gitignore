@@ -76,3 +76,4 @@ Unity/Assets/HybridCLRGenerate
 Unity/Assets/StreamingAssets
 Unity/Bundles
 *.cs.meta
+Unity/out
