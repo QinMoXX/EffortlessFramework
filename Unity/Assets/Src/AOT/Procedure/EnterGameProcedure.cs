@@ -1,54 +1,89 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Cysharp.Threading.Tasks;
 using Framework;
+using HybridCLR;
+using Src.AOT.Framework.Debug;
 using Src.AOT.Framework.Fsm;
 using Src.AOT.Framework.Procedure;
 using Src.AOT.Framework.Resource;
 using UnityEngine;
+using YooAsset;
 
 namespace Src
 {
     public class EnterGameProcedure:ProcedureBase
     {
+        private const string HotDllName = "HotUpdate";
+        private IEntry hotUpdateMain;
+        
         public EnterGameProcedure(IFsm handle) : base(handle)
         {
             
         }
 
-        protected override void OnInit()
+        protected internal override void OnInit()
         {
-            Debug.Log("EnterGameProcedure OnInit");
+            EDebug.Log("EnterGameProcedure OnInit");
         }
 
-        protected override void OnEnter()
+        protected internal override async void OnEnter()
         {
-            Debug.Log("EnterGameProcedure OnEnter");
-            //进入热更新脚本逻辑，Yooasset下载核对完成后加载后面package
-            var package = GameEntry.GetModule<ResourceManager>().defaultPackage;
-            //加载原生打包的dll文件
-            RawFileOperationHandle handlefiles = package.LoadRawFileAsync(HotDllName);
-            await handlefiles.ToUniTask();
-
+            EDebug.Log("EnterGameProcedure OnEnter");
+            // 先补充元数据
+             await LoadMetadataForAOTAssemblies();
+             //进入热更新脚本逻辑，Yooasset下载核对完成后加载后面package
 #if !UNITY_EDITOR
-		//非编辑器下直接加载yooasset中的dll文件
-      	byte[] dllBytes = handlefiles.GetRawFileData();
-      //加载dll，完成dll热更新
-       System.Reflection.Assembly.Load(dllBytes);
+             // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
+             var package = GameEntry.GetModule<ResourceManager>().defaultPackage;
+             //加载原生打包的dll文件
+             var handlefiles = package.LoadAssetSync<TextAsset>(HotDllName + ".dll");
+             await handlefiles;
+             TextAsset assetObject = handlefiles.AssetObject as TextAsset;
+             byte[] dllBytes = assetObject.bytes;
+             Assembly hotUpdateAss = Assembly.Load(dllBytes);
+#else
+             // Editor下无需加载，直接查找获得HotUpdate程序集
+             Assembly hotUpdateAss = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == HotDllName);
 #endif
-            //完成dll加载后，即可进行加载热更新预制体，通过实例化挂载了热更新脚本的预制体直接进入到热更新层的逻辑
-            AssetOperationHandle handle = package.LoadAssetAsync<GameObject>("HotFix_Import");
-            await handle.ToUniTask();
-            GameObject go = handle.InstantiateSync();
-            Debug.Log($"Prefab name is {go.name}"); 作者：我家的柯基叫团团 https://www.bilibili.com/read/cv24251059/ 出处：bilibili
+              //完成dll加载
+              Type type = hotUpdateAss.GetType("HotUpdateMain");
+              hotUpdateMain = Activator.CreateInstance(type) as IEntry;
+              hotUpdateMain?.Entry();
+        }
+        
+        private async UniTask LoadMetadataForAOTAssemblies()
+        {
+            List<string> aotDllList = new List<string>
+            {
+                "mscorlib.dll",
+                "System.dll",
+                "System.Core.dll", // 如果使用了Linq，需要这个
+                // "Newtonsoft.Json.dll", 
+                // "protobuf-net.dll",
+            };
+            var package = GameEntry.GetModule<ResourceManager>().defaultPackage;
+            foreach (var aotDllName in aotDllList)
+            {
+                var handle = package.LoadAssetSync<TextAsset>(aotDllName);
+                await handle;
+                TextAsset assetObject = handle.AssetObject as TextAsset;
+                LoadImageErrorCode err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(assetObject.bytes, HomologousImageMode.SuperSet);
+                EDebug.Log($"LoadMetadataForAOTAssembly:{aotDllName}. ret:{err}");
+            }
         }
 
-        protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            Debug.Log("EnterGameProcedure OnUpdate");
+            EDebug.Log("EnterGameProcedure OnUpdate");
         }
 
-        protected override void OnLeave()
+        protected internal override void OnLeave()
         {
-            Debug.Log("EnterGameProcedure OnLeave");
+            EDebug.Log("EnterGameProcedure OnLeave");
+            hotUpdateMain?.Exit();
         }
     }
 }

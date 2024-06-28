@@ -1,3 +1,4 @@
+using System.Collections;
 using Cysharp.Threading.Tasks;
 using Framework;
 using UnityEngine;
@@ -8,10 +9,17 @@ namespace Src.AOT.Framework.Resource
 {
     public partial class ResourceManager:IGameModule
     {
-        internal ResourceRunningMode Mode = ResourceRunningMode.EDITOR;
+        private ResourceRunningMode m_mode = ResourceRunningMode.ONLINE;
         public short Priority => 1;
 
         public ResourcePackage defaultPackage;
+        public string packageVersion;
+
+        public void SetMode(ResourceRunningMode mode)
+        {
+            m_mode = mode;
+        }
+        
         public void Update(float virtualElapse, float realElapse)
         {
             
@@ -24,53 +32,39 @@ namespace Src.AOT.Framework.Resource
 
         public void Init()
         {
+            packageVersion = string.Empty;
+        }
+
+        public async UniTask Initialize()
+        {
             // 初始化资源系统
             YooAssets.Initialize();
             // 创建默认的资源包
             defaultPackage = YooAssets.CreatePackage("DefaultPackage");
             // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
             YooAssets.SetDefaultPackage(defaultPackage);
-            if (Mode == ResourceRunningMode.STANDALONE)
+            if (m_mode == ResourceRunningMode.STANDALONE)
             {
-                InitializeYooAssetForStandaloneMode(defaultPackage);
+                //单机模式运行
+                var initParameters = new OfflinePlayModeParameters();
+                await defaultPackage.InitializeAsync(initParameters);
             }
-            else if (Mode == ResourceRunningMode.ONLINE)
+            else if (m_mode == ResourceRunningMode.ONLINE)
             {
-                InitializeYooAsset(defaultPackage);
+                await InitializeYooAsset(defaultPackage);
             }
 #if UNITY_EDITOR
-            else if(Mode == ResourceRunningMode.EDITOR)
+            else if(m_mode == ResourceRunningMode.EDITOR)
             {
-                InitializeYooAssetForEditorMode(defaultPackage);
+                //编辑器模式运行
+                var initParameters = new EditorSimulateModeParameters();
+                var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
+                initParameters.SimulateManifestFilePath  = simulateManifestFilePath;
+                await defaultPackage.InitializeAsync(initParameters);
             }
 #endif
         }
-
-#if UNITY_EDITOR
-        /// <summary>
-        /// 编辑器模式下运行
-        /// </summary>
-        /// <param name="package"></param>
-        /// <returns></returns>
-        private UniTask InitializeYooAssetForEditorMode(ResourcePackage package)
-        {
-            var initParameters = new EditorSimulateModeParameters();
-            var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
-            initParameters.SimulateManifestFilePath  = simulateManifestFilePath;
-            return package.InitializeAsync(initParameters).ToUniTask();
-        } 
-#endif
-
-        /// <summary>
-        /// 单机模式运行，需要构建资源包
-        /// </summary>
-        /// <param name="package"></param>
-        /// <returns></returns>
-        private UniTask InitializeYooAssetForStandaloneMode(ResourcePackage package)
-        {
-            var initParameters = new OfflinePlayModeParameters();
-            return package.InitializeAsync(initParameters).ToUniTask();
-        }
+        
         
         private UniTask InitializeYooAsset(ResourcePackage package)
         {
@@ -94,23 +88,8 @@ namespace Src.AOT.Framework.Resource
             // }
             return UniTask.CompletedTask;
         }
+        
 
-        public async UniTask<string> GetUpdatePackageVersion()
-        {
-            var package = YooAssets.GetPackage("DefaultPackage");
-            var operation = package.UpdatePackageVersionAsync();
-            await operation;
-            if (operation.Status == EOperationStatus.Succeed)
-            {
-                //更新成功
-                string packageVersion = operation.PackageVersion;
-                return packageVersion;
-            }
-
-            //更新失败
-            Debug.LogError(operation.Error);
-            return string.Empty;
-        }
             
     }
 }

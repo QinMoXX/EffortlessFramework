@@ -17,12 +17,12 @@ namespace Src
         }
 
         
-        protected override void OnInit()
+        protected internal override void OnInit()
         {
             
         }
 
-        protected override async void OnEnter()
+        protected internal override async void OnEnter()
         {
             var resourceManager = GameEntry.GetModule<ResourceManager>();
             await resourceManager.Initialize();
@@ -31,10 +31,10 @@ namespace Src
             EDebug.Log("VersionCheckProcedure OnEnter");
         }
 
-        protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             Debug.Log("VersionCheckProcedure OnUpdate");
-            if (packageVersion == string.Empty)
+            if (packageVersion == string.Empty || GameEntry.GetModule<ResourceManager>().defaultPackage.InitializeStatus != EOperationStatus.Succeed)
             {
                 return;
             }
@@ -42,7 +42,7 @@ namespace Src
             this.ChangeState<DownloadProcedure>();
         }
 
-        protected override void OnLeave()
+        protected internal override void OnLeave()
         {
             Debug.Log("VersionCheckProcedure OnLeave");
         }

@@ -21,8 +21,8 @@ MonoBehaviour:
     EnableAddressable: 1
     LocationToLower: 0
     IncludeAssetGUID: 0
-    IgnoreDefaultType: 1
     AutoCollectShaders: 1
+    IgnoreRuleName: NormalIgnoreRule
     Groups:
     - GroupName: UI
       GroupDesc: "UI\u754C\u9762"
@@ -39,7 +39,7 @@ MonoBehaviour:
         UserData: 
     - GroupName: Dll
       GroupDesc: "\u70ED\u66F4\u4EE3\u7801"
-      AssetTags: HotUpdate
+      AssetTags: Dll
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/Res/Src

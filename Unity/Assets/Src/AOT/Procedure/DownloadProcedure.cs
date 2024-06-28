@@ -19,25 +19,25 @@ namespace Src
         {
         }
 
-        protected override void OnInit()
+        protected internal override void OnInit()
         {
             EDebug.Log("DownloadProcedure OnInit");
             downloadDone = false;
         }
 
-        protected override void OnEnter()
+        protected internal override void OnEnter()
         {
             EDebug.Log("DownloadProcedure OnEnter");
             
         }
 
-        protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             EDebug.Log("DownloadProcedure OnUpdate");
             this.ChangeState<EnterGameProcedure>();
         }
 
-        protected override void OnLeave()
+        protected internal override void OnLeave()
         {
             EDebug.Log("DownloadProcedure OnLeave");
         }
