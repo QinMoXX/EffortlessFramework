@@ -79,12 +79,12 @@ namespace Framework
         /// </summary>
         /// <typeparam name="T">模块类型</typeparam>
         /// <returns>返回已创建模块</returns>
-        public static IGameModule CreatModule<T>() where T:class,IGameModule, new()
+        public static T CreatModule<T>() where T:class,IGameModule, new()
         {
             IGameModule module = new T();
             _GameModule.Add( module.Priority,module);
             module.Init();
-            return module;
+            return module as T;
         }
     }
 }

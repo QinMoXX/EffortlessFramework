@@ -8,7 +8,7 @@ using Src.AOT.Framework.Procedure;
 using Src.AOT.Framework.Resource;
 using UnityEngine;
 
-public class Mian : MonoBehaviour
+public class Main : MonoBehaviour
 {
     private void Awake()
     {
