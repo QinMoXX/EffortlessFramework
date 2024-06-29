@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using DataStructure;
+using GameFramework;
+using Src.AOT.Framework;
 
 namespace Framework
 {
@@ -81,10 +84,61 @@ namespace Framework
         /// <returns>返回已创建模块</returns>
         public static T CreatModule<T>() where T:class,IGameModule, new()
         {
+#if UNITY_EDITOR
+            //编辑器下进行模块检查，实际运行提高性能可不进行模块检查
+            ModuleInspect<T>();
+#endif
+            
             IGameModule module = new T();
             _GameModule.Add( module.Priority,module);
             module.Init();
             return module as T;
+        }
+
+        /// <summary>
+        /// 模块检擦
+        /// </summary>
+        /// <typeparam name="T">被检查模块类型</typeparam>
+        /// <returns>是否通过检查</returns>
+        /// <exception cref="GameFrameworkException"></exception>
+        private static void ModuleInspect<T>() where T:class,IGameModule, new()
+        {
+            Type moduleType = typeof(T);
+            //获取DependencyModule特性
+            var dependencyAttributes = moduleType.GetCustomAttributes(typeof(DependencyModuleAttribute), false);
+            //存在特性判断
+            if (dependencyAttributes.Length > 0)
+            {
+                //获取依赖模块
+                var dependencyModules = dependencyAttributes[0] as DependencyModuleAttribute;
+                //遍历依赖模块
+                foreach (var dependencyModule in dependencyModules.Dependencies)
+                {
+                    //判断依赖模块是否存在
+                    if (!HasModule(dependencyModule))
+                    {
+                        throw new GameFrameworkException((Utility.String.Format("Dependency module {0} is not exist, please create before {1} module.",
+                            dependencyModule.Name, moduleType.FullName)));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 判断模块是否存在
+        /// </summary>
+        /// <param name="moduleType">模块类型</param>
+        /// <returns>是否存在</returns>
+        private static bool HasModule(Type moduleType)
+        {
+            foreach (var keyValue in _GameModule.List)
+            {
+                if (keyValue.Item2.GetType() == moduleType)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
