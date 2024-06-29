@@ -11,6 +11,8 @@ namespace AOT.Framework.Resource
 
         public ResourcePackage defaultPackage;
         public string packageVersion;
+        
+        public bool IsInitialize { get;private set; }
 
         public void SetMode(ResourceRunningMode mode)
         {
@@ -60,6 +62,7 @@ namespace AOT.Framework.Resource
                 await defaultPackage.InitializeAsync(initParameters);
             }
 #endif
+            IsInitialize = true;
         }
         
         
@@ -85,8 +88,25 @@ namespace AOT.Framework.Resource
             // }
             return UniTask.CompletedTask;
         }
-        
 
+        /// <summary>
+        /// 获取Unity资源
+        /// </summary>
+        /// <param name="assetName">资源名称或路径</param>
+        /// <typeparam name="T">资源类型</typeparam>
+        /// <returns></returns>
+        /// <exception cref="GameFrameworkException"></exception>
+        public async UniTask<T> LoadAsset<T>(string assetName) where T : UnityEngine.Object
+        {
+            if (defaultPackage == null || !IsInitialize)
+            {
+                throw new GameFrameworkException("package is null or not initialize.");
+            }
+
+            var handle = defaultPackage.LoadAssetAsync<T>(assetName);
+            await handle;
+            return handle.AssetObject as T;
+        }
             
     }
 }
