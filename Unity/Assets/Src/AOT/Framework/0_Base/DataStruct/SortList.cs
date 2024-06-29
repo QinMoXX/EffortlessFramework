@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using GameFramework;
 
-namespace DataStructure
+namespace AOT.Framework
 {
     public class SortList<TKey,TValue>where TKey:IComparable<TKey>
     {

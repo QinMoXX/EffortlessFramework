@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Framework;
 
-namespace Src.AOT.Framework.Mvc
+namespace AOT.Framework.Mvc
 {
     /// <summary>
     /// MVC 模块

@@ -1,4 +1,4 @@
-namespace Framework
+namespace AOT.Framework
 {
     public interface IGameModule
     {

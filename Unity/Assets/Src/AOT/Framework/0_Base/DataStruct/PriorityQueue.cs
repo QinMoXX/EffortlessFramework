@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace DataStructure
+namespace AOT.Framework
 {
     public class PriorityQueue<TElement,TPriority> where TPriority :IComparable<TPriority>
     {

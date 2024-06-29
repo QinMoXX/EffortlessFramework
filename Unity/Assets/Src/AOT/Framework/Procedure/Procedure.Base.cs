@@ -1,6 +1,6 @@
-﻿using Src.AOT.Framework.Fsm;
+﻿using AOT.Framework.Fsm;
 
-namespace Src.AOT.Framework.Procedure
+namespace AOT.Framework.Procedure
 {
     public sealed class ProcedureFsm:FsmBase
     {

@@ -1,15 +1,12 @@
-using System.Collections.Generic;
+using AOT.Framework;
 using Cysharp.Threading.Tasks;
-using Framework;
-using HybridCLR;
 using Src;
-using Src.AOT.Framework.Debug;
-using Src.AOT.Framework.Fsm;
-using Src.AOT.Framework.Procedure;
-using Src.AOT.Framework.Resource;
+using AOT.Framework.Debug;
+using AOT.Framework.Fsm;
+using AOT.Framework.Procedure;
+using AOT.Framework.Resource;
 using UnityEngine;
-using YooAsset;
-using LogType = Src.AOT.Framework.Debug.LogType;
+using LogType = AOT.Framework.Debug.LogType;
 
 public class Main : MonoBehaviour
 {

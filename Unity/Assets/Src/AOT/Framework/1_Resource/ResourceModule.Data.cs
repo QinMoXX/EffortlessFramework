@@ -1,6 +1,5 @@
-﻿using Framework;
-
-namespace Src.AOT.Framework.Resource
+﻿
+namespace AOT.Framework.Resource
 {
     public partial class ResourceManager:IGameModule
     {

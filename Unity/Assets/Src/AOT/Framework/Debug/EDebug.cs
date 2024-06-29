@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace Src.AOT.Framework.Debug
+namespace AOT.Framework.Debug
 {
         
     public static partial class EDebug

@@ -1,4 +1,4 @@
-namespace Src.AOT.Framework.Debug
+namespace AOT.Framework.Debug
 {
     /// <summary>
     /// 日志辅助接口

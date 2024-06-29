@@ -1,6 +1,6 @@
 using System;
 
-namespace Src.AOT.Framework
+namespace AOT.Framework
 {
     /// <summary>
     /// 模块依赖特性

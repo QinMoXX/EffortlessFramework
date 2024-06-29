@@ -1,4 +1,4 @@
-namespace Src.AOT.Framework.Mvc
+namespace AOT.Framework.Mvc
 {
     public interface IModel
     {

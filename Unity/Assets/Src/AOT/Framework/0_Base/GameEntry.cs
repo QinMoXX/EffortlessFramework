@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using DataStructure;
-using GameFramework;
-using Src.AOT.Framework;
 
-namespace Framework
+namespace AOT.Framework
 {
     /// <summary>
     /// 游戏入口

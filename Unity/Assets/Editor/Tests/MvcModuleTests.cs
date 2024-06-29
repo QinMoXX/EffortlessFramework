@@ -1,7 +1,7 @@
-using Framework;
+using AOT.Framework;
 using NUnit.Framework;
-using Src.AOT.Framework.Debug;
-using Src.AOT.Framework.Mvc;
+using AOT.Framework.Debug;
+using AOT.Framework.Mvc;
 
 public class MvcManagerTests
 {

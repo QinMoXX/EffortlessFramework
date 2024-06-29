@@ -1,6 +1,6 @@
 using System;
 
-namespace Src.AOT.Framework.Debug
+namespace AOT.Framework.Debug
 {
     [Flags]
     public enum LogType: byte

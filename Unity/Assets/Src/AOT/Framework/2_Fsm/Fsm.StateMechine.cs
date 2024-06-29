@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Src.AOT.Framework.Procedure;
+using AOT.Framework.Procedure;
 
-namespace Src.AOT.Framework.Fsm
+namespace AOT.Framework.Fsm
 {
     public interface IFsm
     {

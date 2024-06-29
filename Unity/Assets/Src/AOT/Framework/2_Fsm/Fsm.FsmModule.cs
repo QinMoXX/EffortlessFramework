@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Framework;
-using UnityEngine;
 
-namespace Src.AOT.Framework.Fsm
+namespace AOT.Framework.Fsm
 {
     public sealed class FsmManager:IGameModule
     {

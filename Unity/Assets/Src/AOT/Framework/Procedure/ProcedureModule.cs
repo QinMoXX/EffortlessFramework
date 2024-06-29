@@ -1,9 +1,10 @@
 ﻿using System;
-using Framework;
-using Src.AOT.Framework.Fsm;
+using AOT.Framework.Fsm;
 
-namespace Src.AOT.Framework.Procedure
+
+namespace AOT.Framework.Procedure
 {
+    [DependencyModule(typeof(FsmManager))]
     public class ProcedureManager:IGameModule
     {
         public const string ProcedureFsmName = "Procedure";
@@ -75,6 +76,13 @@ namespace Src.AOT.Framework.Procedure
                 throw new Exception("You must create Fsm manager first.");
             }
 
+            if (m_ProcedureFsm != null)
+            {
+                //存在流程状态机先关闭，再重新创建
+                m_ProcedureFsm.Shutdown();
+                m_FsManager.RemoveFsm(ProcedureFsmName);
+                m_ProcedureFsm = null;
+            }
             m_ProcedureFsm = m_FsManager.CreateFsm<ProcedureFsm>(ProcedureFsmName, procedures);
         }
         

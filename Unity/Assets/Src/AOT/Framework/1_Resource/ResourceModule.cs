@@ -1,11 +1,8 @@
-using System.Collections;
 using Cysharp.Threading.Tasks;
-using Framework;
-using UnityEngine;
 using YooAsset;
 
 
-namespace Src.AOT.Framework.Resource
+namespace AOT.Framework.Resource
 {
     public partial class ResourceManager:IGameModule
     {

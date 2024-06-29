@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace GameFramework
+namespace AOT.Framework
 {
     /// <summary>
     /// 游戏框架异常类。

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Src.AOT.Framework.Fsm
+namespace AOT.Framework.Fsm
 {
     public abstract class FsmStateBase
     {

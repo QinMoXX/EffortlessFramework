@@ -1,8 +1,5 @@
-using System;
-using Framework;
-using GameFramework;
 using NUnit.Framework;
-using Src.AOT.Framework;
+using AOT.Framework;
 
 public class GameModuleTests
 {
