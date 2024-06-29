@@ -17,6 +17,8 @@ public class RuntimeInspector
         DependencyTracker dependencyTracker = new DependencyTracker();
         //获取AOT程序集，如有需要可以增加程序集
         Assembly assembly = Assembly.GetAssembly(typeof(DependencyModuleAttribute));
+        //追踪模块依赖特性是否正确应用于模块接口
+        //避免编写意义不明确的代码
         dependencyTracker.TrackDependencies(assembly);
         foreach (var type in dependencyTracker.GetDependencies().Keys)
         {
