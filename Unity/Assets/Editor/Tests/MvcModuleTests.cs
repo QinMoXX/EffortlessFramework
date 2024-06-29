@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Src.AOT.Framework.Debug;
 using Src.AOT.Framework.Mvc;
 
-public class MvcModuleTests
+public class MvcManagerTests
 {
     public class MockModel : IModel
     {
@@ -30,13 +30,13 @@ public class MvcModuleTests
     [Test]
     public void TestGetView_Generic_ReturnsSameInstance()
     {
-        MvcModule mvcModule = GameEntry.CreatModule<MvcModule>();
+        MvcManager mvcManager = GameEntry.CreatModule<MvcManager>();
         // Arrange
         var viewType = typeof(MockView);
 
         // Act
-        var view1 = mvcModule.GetView<MockView>();
-        var view2 = mvcModule.GetView<MockView>();
+        var view1 = mvcManager.GetView<MockView>();
+        var view2 = mvcManager.GetView<MockView>();
 
         // Assert
         Assert.AreSame(view1, view2, "Should return the same instance when called twice.");
@@ -45,13 +45,13 @@ public class MvcModuleTests
     [Test]
     public void TestGetModel_Generic_ReturnsSameInstance()
     {
-        MvcModule mvcModule = GameEntry.CreatModule<MvcModule>();
+        MvcManager mvcManager = GameEntry.CreatModule<MvcManager>();
         // Arrange
         var modelType = typeof(MockModel);
 
         // Act
-        var model1 = mvcModule.GetModel<MockModel>();
-        var model2 = mvcModule.GetModel<MockModel>();
+        var model1 = mvcManager.GetModel<MockModel>();
+        var model2 = mvcManager.GetModel<MockModel>();
 
         // Assert
         Assert.AreSame(model1, model2, "Should return the same instance when called twice.");
@@ -60,13 +60,13 @@ public class MvcModuleTests
     [Test]
     public void TestGetController_Generic_ReturnsSameInstance()
     {
-        MvcModule mvcModule = GameEntry.CreatModule<MvcModule>();
+        MvcManager mvcManager = GameEntry.CreatModule<MvcManager>();
         // Arrange
         var controllerType = typeof(MockController);
 
         // Act
-        var controller1 = mvcModule.GetController<MockController>();
-        var controller2 = mvcModule.GetController<MockController>();
+        var controller1 = mvcManager.GetController<MockController>();
+        var controller2 = mvcManager.GetController<MockController>();
 
         // Assert
         Assert.AreSame(controller1, controller2, "Should return the same instance when called twice.");
