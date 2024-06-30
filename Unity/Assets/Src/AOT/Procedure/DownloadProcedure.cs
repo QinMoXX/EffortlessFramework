@@ -27,13 +27,16 @@ namespace Src
         protected internal override void OnEnter()
         {
             EDebug.Log("DownloadProcedure OnEnter");
-            
+            UpdatePackageManifest().Forget();
         }
 
         protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             EDebug.Log("DownloadProcedure OnUpdate");
-            this.ChangeState<EnterGameProcedure>();
+            if (downloadDone)
+            {
+                this.ChangeState<EnterGameProcedure>();
+            }
         }
 
         protected internal override void OnLeave()
@@ -45,7 +48,7 @@ namespace Src
         /// <summary>
         /// 更新版本清单资源
         /// </summary>
-        public async UniTask UpdatePackageManifest()
+        public async UniTaskVoid UpdatePackageManifest()
         {
             var package = GameEntry.GetModule<ResourceManager>().defaultPackage;
             var operation = package.UpdatePackageManifestAsync(GameEntry.GetModule<ResourceManager>().packageVersion);

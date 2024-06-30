@@ -80,7 +80,6 @@ namespace Src
         protected internal override void OnLeave()
         {
             EDebug.Log("EnterGameProcedure OnLeave");
-            hotUpdateMain?.Exit();
         }
     }
 }

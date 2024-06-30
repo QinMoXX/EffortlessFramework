@@ -79,7 +79,6 @@ namespace AOT.Framework.Procedure
             if (m_ProcedureFsm != null)
             {
                 //存在流程状态机先关闭，再重新创建
-                m_ProcedureFsm.Shutdown();
                 m_FsManager.RemoveFsm(ProcedureFsmName);
                 m_ProcedureFsm = null;
             }
