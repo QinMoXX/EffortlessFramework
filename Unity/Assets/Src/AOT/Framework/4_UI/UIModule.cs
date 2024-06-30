@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AOT.Framework;
@@ -62,8 +63,8 @@ namespace Framework.UI
 
         public void Initialize(IUIGroupHelper uiGroupHelper, IUIFormHelper uiFormHelper)
         {
-            m_uiGroupHelper = UIGroupHelper;
-            m_uiFormHelper = UIFormHelper;
+            m_uiGroupHelper = uiGroupHelper;
+            m_uiFormHelper = uiFormHelper;
         }
         
         public void Init()

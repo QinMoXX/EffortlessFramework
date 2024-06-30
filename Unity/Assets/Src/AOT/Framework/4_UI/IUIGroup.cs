@@ -13,7 +13,7 @@ namespace AOT.Framework.UI
         string Name { get; }
         
         /// <summary>
-        /// 界面组深度
+        /// 界面组深度(数值越大代表越靠前)
         /// </summary>
         int Depth { get; set; }
         
