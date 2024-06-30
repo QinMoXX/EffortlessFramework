@@ -63,12 +63,10 @@ namespace Src
                 // "Newtonsoft.Json.dll", 
                 // "protobuf-net.dll",
             };
-            var package = GameEntry.GetModule<ResourceManager>().defaultPackage;
+            var resourceManager = GameEntry.GetModule<ResourceManager>();
             foreach (var aotDllName in aotDllList)
             {
-                var handle = package.LoadAssetSync<TextAsset>(aotDllName);
-                await handle;
-                TextAsset assetObject = handle.AssetObject as TextAsset;
+                var assetObject = await resourceManager.LoadAsset<TextAsset>(aotDllName);
                 LoadImageErrorCode err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(assetObject.bytes, HomologousImageMode.SuperSet);
                 EDebug.Log($"LoadMetadataForAOTAssembly:{aotDllName}. ret:{err}");
             }
