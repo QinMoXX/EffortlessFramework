@@ -77,3 +77,4 @@ Unity/Assets/StreamingAssets
 Unity/Bundles
 *.cs.meta
 Unity/out
+Unity/.vsconfig
