@@ -1,7 +1,7 @@
 ﻿
 namespace AOT.Framework
 {
-	public abstract class SingletonInstance<T> where T : class, ISingleton
+	public abstract class SingletonInstance<T> where T : class
 	{
 		private static T _instance;
 		public static T Instance
