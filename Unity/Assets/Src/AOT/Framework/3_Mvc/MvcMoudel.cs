@@ -7,7 +7,7 @@ namespace AOT.Framework.Mvc
     /// <summary>
     /// MVC 模块
     /// </summary>
-    public class MvcManager:IGameModule
+    public class MvcManager:SingletonInstance<MvcManager>,IGameModule
     {
         public short Priority => 3;
 
