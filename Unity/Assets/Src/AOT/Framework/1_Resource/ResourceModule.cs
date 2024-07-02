@@ -90,13 +90,13 @@ namespace AOT.Framework.Resource
         }
 
         /// <summary>
-        /// 获取Unity资源
+        /// 异步加载Unity资源
         /// </summary>
         /// <param name="assetName">资源名称或路径</param>
         /// <typeparam name="T">资源类型</typeparam>
         /// <returns></returns>
         /// <exception cref="GameFrameworkException"></exception>
-        public async UniTask<T> LoadAsset<T>(string assetName) where T : UnityEngine.Object
+        public async UniTask<T> LoadAssetAsync<T>(string assetName) where T : UnityEngine.Object
         {
             if (defaultPackage == null || !IsInitialize)
             {
@@ -108,5 +108,22 @@ namespace AOT.Framework.Resource
             return handle.AssetObject as T;
         }
             
+        /// <summary>
+        /// 同步加载Unity资源
+        /// </summary>
+        /// <param name="assetName">资源名称或路径</param>
+        /// <typeparam name="T">资源类型</typeparam>
+        /// <returns></returns>
+        /// <exception cref="GameFrameworkException"></exception>
+        public T LoadAssetSync<T>(string assetName) where T : UnityEngine.Object
+        {
+            if (defaultPackage == null || !IsInitialize)
+            {
+                throw new GameFrameworkException("package is null or not initialize.");
+            }
+
+            var handle = defaultPackage.LoadAssetSync<T>(assetName);
+            return handle.AssetObject as T;
+        }
     }
 }

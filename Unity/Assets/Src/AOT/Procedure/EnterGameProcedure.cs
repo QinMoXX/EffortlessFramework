@@ -66,7 +66,7 @@ namespace Src
             var resourceManager = GameEntry.GetModule<ResourceManager>();
             foreach (var aotDllName in aotDllList)
             {
-                var assetObject = await resourceManager.LoadAsset<TextAsset>(aotDllName);
+                var assetObject = await resourceManager.LoadAssetAsync<TextAsset>(aotDllName);
                 LoadImageErrorCode err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(assetObject.bytes, HomologousImageMode.SuperSet);
                 EDebug.Log($"LoadMetadataForAOTAssembly:{aotDllName}. ret:{err}");
             }

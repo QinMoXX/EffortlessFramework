@@ -26,7 +26,7 @@ namespace AOT.UI
         {
             //创建界面类
             UIForm uiForm = (UIForm)Activator.CreateInstance(uiFormType);
-            GameObject gameObject = await m_resourceManager.LoadAsset<GameObject>(uiForm.Name);
+            GameObject gameObject = await m_resourceManager.LoadAssetAsync<GameObject>(uiForm.Name);
             UIGroup uiGroup = m_uiManager.GetUIGroup(uiForm.UIGroup) as UIGroup;
             GameObject uiGo = GameObject.Instantiate(gameObject,uiGroup.Handle.transform,false);
             uiGo.SetActive(false);

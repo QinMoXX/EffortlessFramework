@@ -20,7 +20,7 @@ public class HomeMenuProcedure:ProcedureBase
         EDebug.Log("初始主菜单流程");
     }
 
-    protected override async void OnEnter()
+    protected override void OnEnter()
     {
         EDebug.Log("进入主菜单");
 
