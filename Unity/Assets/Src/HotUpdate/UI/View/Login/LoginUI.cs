@@ -1,4 +1,5 @@
 using AOT.UI;
+using UnityEngine;
 
 namespace HotUpdate.UI
 {
@@ -14,7 +15,8 @@ namespace HotUpdate.UI
 
         public override void OnShow(object param)
         {
-            
+            Debug.Log("LoginUI OnShow");
+            Debug.Log(TableManager.Instance.CfgClientTable.TbItem.GetOrDefault(10004).Name);
         }
 
         public override void OnUpdate(float elapaseSeconds, float realElapseSeconds)
