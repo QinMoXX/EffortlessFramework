@@ -50,3 +50,16 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+    - GroupName: Table
+      GroupDesc: "\u6570\u636E\u8868"
+      AssetTags: Table
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Res/Table
+        CollectorGUID: 32b9e726f27072b43acec312143789b1
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
