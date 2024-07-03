@@ -5,7 +5,7 @@ using AOT.Framework.Fsm;
 namespace AOT.Framework.Procedure
 {
     [DependencyModule(typeof(FsmManager))]
-    public class ProcedureManager:IGameModule
+    public class ProcedureManager:IGameModule,IProcedureManager
     {
         public const string ProcedureFsmName = "Procedure";
         private FsmManager m_FsManager;
@@ -64,7 +64,7 @@ namespace AOT.Framework.Procedure
         /// </summary>
         /// <param name="procedures">流程类型</param>
         /// <exception cref="Exception"></exception>
-        public void Initialize(params Type[] procedures)
+        public IProcedureManager Initialize(params Type[] procedures)
         {
             if (m_FsManager == null)
             {
@@ -83,6 +83,7 @@ namespace AOT.Framework.Procedure
                 m_ProcedureFsm = null;
             }
             m_ProcedureFsm = m_FsManager.CreateFsm<ProcedureFsm>(ProcedureFsmName, procedures);
+            return this;
         }
         
         /// <summary>
