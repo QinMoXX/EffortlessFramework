@@ -35,7 +35,7 @@ namespace Src
         protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             Debug.Log("VersionCheckProcedure OnUpdate");
-            if (packageVersion == string.Empty || GameEntry.GetModule<ResourceManager>().defaultPackage.InitializeStatus != EOperationStatus.Succeed)
+            if (packageVersion == string.Empty || GameEntry.GetModule<ResourceManager>().IsInitialize)
             {
                 return;
             }
@@ -55,7 +55,7 @@ namespace Src
         public async UniTask<string> GetUpdatePackageVersion()
         {
             var resourceManager = GameEntry.GetModule<ResourceManager>();
-            var package = resourceManager.defaultPackage;
+            var package = resourceManager.DefaultPackage;
             var operation = package.UpdatePackageVersionAsync();
             await operation.ToUniTask();
             if (operation.Status != EOperationStatus.Succeed)

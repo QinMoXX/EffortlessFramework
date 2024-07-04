@@ -4,14 +4,14 @@ using YooAsset;
 
 namespace AOT.Framework.Resource
 {
-    public partial class ResourceManager:IGameModule
+    public partial class ResourceManager:IGameModule,IResourceManager
     {
         private ResourceRunningMode m_mode = ResourceRunningMode.ONLINE;
         public short Priority => 1;
 
-        public ResourcePackage defaultPackage;
         public string packageVersion;
-        
+
+        public ResourcePackage DefaultPackage { get;private set; }
         public bool IsInitialize { get;private set; }
 
         public void SetMode(ResourceRunningMode mode)
@@ -39,18 +39,18 @@ namespace AOT.Framework.Resource
             // 初始化资源系统
             YooAssets.Initialize();
             // 创建默认的资源包
-            defaultPackage = YooAssets.CreatePackage("DefaultPackage");
+            DefaultPackage = YooAssets.CreatePackage("DefaultPackage");
             // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
-            YooAssets.SetDefaultPackage(defaultPackage);
+            YooAssets.SetDefaultPackage(DefaultPackage);
             if (m_mode == ResourceRunningMode.STANDALONE)
             {
                 //单机模式运行
                 var initParameters = new OfflinePlayModeParameters();
-                await defaultPackage.InitializeAsync(initParameters);
+                await DefaultPackage.InitializeAsync(initParameters);
             }
             else if (m_mode == ResourceRunningMode.ONLINE)
             {
-                await InitializeYooAsset(defaultPackage);
+                await InitializeYooAsset(DefaultPackage);
             }
 #if UNITY_EDITOR
             else if(m_mode == ResourceRunningMode.EDITOR)
@@ -59,13 +59,13 @@ namespace AOT.Framework.Resource
                 var initParameters = new EditorSimulateModeParameters();
                 var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
                 initParameters.SimulateManifestFilePath  = simulateManifestFilePath;
-                await defaultPackage.InitializeAsync(initParameters);
+                await DefaultPackage.InitializeAsync(initParameters);
             }
 #endif
             IsInitialize = true;
         }
-        
-        
+
+
         private UniTask InitializeYooAsset(ResourcePackage package)
         {
             // 注意：GameQueryServices.cs 太空战机的脚本类，详细见StreamingAssetsHelper.cs
@@ -98,12 +98,12 @@ namespace AOT.Framework.Resource
         /// <exception cref="GameFrameworkException"></exception>
         public async UniTask<T> LoadAssetAsync<T>(string assetName) where T : UnityEngine.Object
         {
-            if (defaultPackage == null || !IsInitialize)
+            if (DefaultPackage == null || !IsInitialize)
             {
                 throw new GameFrameworkException("package is null or not initialize.");
             }
 
-            var handle = defaultPackage.LoadAssetAsync<T>(assetName);
+            var handle = DefaultPackage.LoadAssetAsync<T>(assetName);
             await handle;
             return handle.AssetObject as T;
         }
@@ -117,12 +117,12 @@ namespace AOT.Framework.Resource
         /// <exception cref="GameFrameworkException"></exception>
         public T LoadAssetSync<T>(string assetName) where T : UnityEngine.Object
         {
-            if (defaultPackage == null || !IsInitialize)
+            if (DefaultPackage == null || !IsInitialize)
             {
                 throw new GameFrameworkException("package is null or not initialize.");
             }
 
-            var handle = defaultPackage.LoadAssetSync<T>(assetName);
+            var handle = DefaultPackage.LoadAssetSync<T>(assetName);
             return handle.AssetObject as T;
         }
     }

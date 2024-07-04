@@ -50,7 +50,7 @@ namespace Src
         /// </summary>
         public async UniTaskVoid UpdatePackageManifest()
         {
-            var package = GameEntry.GetModule<ResourceManager>().defaultPackage;
+            var package = GameEntry.GetModule<ResourceManager>().DefaultPackage;
             var operation = package.UpdatePackageManifestAsync(GameEntry.GetModule<ResourceManager>().packageVersion);
             await operation.ToUniTask();
             if (operation.Status != EOperationStatus.Succeed)
@@ -66,7 +66,7 @@ namespace Src
         
         private async UniTask Download()
         {
-            var package = GameEntry.GetModule<ResourceManager>().defaultPackage;
+            var package = GameEntry.GetModule<ResourceManager>().DefaultPackage;
             var downloader = package.CreateResourceDownloader(downloadingMaxNum, failedTryAgain, timeout);
             //没有需要下载的资源
             if (downloader.TotalDownloadCount == 0)

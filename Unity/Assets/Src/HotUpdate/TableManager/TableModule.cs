@@ -1,42 +1,41 @@
 using AOT.Framework;
 using AOT.Framework.Resource;
-using Cysharp.Threading.Tasks;
-using Luban;
-using SimpleJSON;
-using UnityEngine;
+using AOT.Framework.Table;
+using cfg;
 
 namespace HotUpdate
 {
     [DependencyModule(typeof(ResourceManager))]
-    public sealed partial class TableManager:SingletonInstance<TableManager>,IGameModule
+    public sealed class TableManager:SingletonInstance<TableManager>,ITableManager<Tables>,IGameModule
     {
         public short Priority => 10;
 
-        private cfg.Tables m_ClientTable;
-        
-        public cfg.Tables CfgClientTable
+        private TableHelper m_TableHelper;
+
+        public Tables CfgClientTable
         {
             get
             {
-                if (m_ClientTable == null)
+                if (m_TableHelper == null)
                 {
                     throw new GameFrameworkException("TableManager.ClientTable does not exist");
                 }
-                return m_ClientTable;
+                return m_TableHelper.CfgClientTable;
             }
         }
         
-        private ResourceManager m_ResourceManager;
+
+        public ITableManager<Tables> Initialize(IResourceManager gameModule)
+        {
+            m_TableHelper = new TableHelper(gameModule);
+            return this;
+        }
+
         public void Init()
         {
             
         }
-
-        public void Initialize(ResourceManager resourceManager)
-        {
-            m_ResourceManager = resourceManager;
-            m_ClientTable = new cfg.Tables(LoadByteBuf);
-        }
+        
 
         public void Update(float virtualElapse, float realElapse)
         {
@@ -47,11 +46,6 @@ namespace HotUpdate
             
         }
         
-
-        private ByteBuf LoadByteBuf(string file)
-        {
-            TextAsset textAsset = m_ResourceManager.LoadAssetSync<TextAsset>(file);
-            return new ByteBuf(textAsset.bytes);
-        }
+        
     }
 }
