@@ -35,7 +35,7 @@ namespace Src
         protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             Debug.Log("VersionCheckProcedure OnUpdate");
-            if (packageVersion == string.Empty || GameEntry.GetModule<ResourceManager>().IsInitialize)
+            if (packageVersion == string.Empty || !GameEntry.GetModule<ResourceManager>().IsInitialize)
             {
                 return;
             }
