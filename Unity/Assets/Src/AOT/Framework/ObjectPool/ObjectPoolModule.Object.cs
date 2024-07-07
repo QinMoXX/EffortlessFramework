@@ -7,7 +7,7 @@ namespace AOT.Framework.ObjectPool
         public sealed class Object<T>:IObject,IReference where T:ObjectBase
         {
             private string m_Name;
-            private ObjectBase m_Object;
+            private T m_Object;
             private DateTime m_LastUseTime;
             private  bool m_IsRelease;
             private int m_ReferenceCount;
@@ -56,6 +56,11 @@ namespace AOT.Framework.ObjectPool
                 {
                     return  m_LastUseTime;
                 }
+            }
+
+            public T GetObjectBase()
+            {
+                return  m_Object;
             }
 
             public bool IsRelease

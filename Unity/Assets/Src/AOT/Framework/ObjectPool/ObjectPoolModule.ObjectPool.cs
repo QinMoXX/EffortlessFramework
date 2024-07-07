@@ -9,6 +9,7 @@ namespace AOT.Framework.ObjectPool
         public sealed class ObjectPool<T>:IObjectPool where T:ObjectBase,new()
         {
             private readonly Dictionary<object, Object<T>> m_ObjectDict; //全部对象字典
+            private readonly Dictionary<string, List<Object<T>>> m_ObjectBucket; //对象桶
             private readonly List<Object<T>> m_CachedCanReleaseObjects; //可释放对象缓存
             private readonly List<Object<T>> m_CachedCanToReleaseObjects; //即将释放对象缓存
             private float m_AutoReleaseTime; //自动释放时间
@@ -119,6 +120,7 @@ namespace AOT.Framework.ObjectPool
                 m_ObjectDict = new Dictionary<object, Object<T>>();
                 m_CachedCanReleaseObjects = new List<Object<T>>();
                 m_CachedCanToReleaseObjects = new List<Object<T>>();
+                m_ObjectBucket = new Dictionary<string, List<Object<T>>>();
             }
             
             public bool HasObject(object target)
@@ -140,32 +142,44 @@ namespace AOT.Framework.ObjectPool
                 
             }
 
-            public IObject Spawn()
+            public IObject Spawn(string objectName)
             {
                 Object<T> obj = null;
-                foreach (var keyValue in m_ObjectDict)
+                if (!m_ObjectBucket.TryGetValue(objectName, out var objectList))
                 {
-                    if (keyValue.Value.ReleaseCount <= 0 | m_AllowMultiSpawn)
+                    obj = CreateObject(objectName);
+                }
+                else
+                {
+                    foreach (var internalObject in objectList)
                     {
-                        obj = keyValue.Value;
-                        break;
+                        if (internalObject.ReleaseCount <= 0 | m_AllowMultiSpawn)
+                        {
+                            obj = internalObject;
+                            break;
+                        }
                     }
                 }
-
-                if (obj == null)
-                {
-                    obj = CreateObject();
-                }
                 obj.OnSpawn();
-                return obj; 
+                return  obj;
             }
 
-            public Object<T> CreateObject()
+            public Object<T> CreateObject(string objectName)
             {
+                if (string.IsNullOrEmpty(objectName))
+                {
+                    throw  new GameFrameworkException("Object name is invalid.");
+                }
                 T @object = ReferencePool.Acquire<T>();
-                @object.Initialize(m_Name);
-                Object<T> internalObject = Object<T>.Create(m_Name,@object);
+                @object.Initialize(objectName);
+                Object<T> internalObject = Object<T>.Create(objectName,@object);
                 m_ObjectDict.Add(internalObject.Target, internalObject);
+                if (!m_ObjectBucket.TryGetValue(objectName, out var objectList))
+                {
+                    objectList = new List<Object<T>>();
+                    m_ObjectBucket.Add(objectName, objectList);
+                }
+                objectList.Add(internalObject);
                 return internalObject;
             }
 
@@ -215,6 +229,10 @@ namespace AOT.Framework.ObjectPool
                     throw  new GameFrameworkException("Object is invalid.");
                 }
                 m_ObjectDict.Remove(internalObject.Target);
+                if (m_ObjectBucket.TryGetValue(internalObject.Name, out var objectList))
+                {
+                    objectList.Remove(internalObject);
+                }
                 internalObject.Release();
                 ReferencePool.Release(internalObject);
             }

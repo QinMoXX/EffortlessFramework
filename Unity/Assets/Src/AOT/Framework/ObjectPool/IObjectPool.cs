@@ -22,7 +22,7 @@ namespace AOT.Framework.ObjectPool
         
         public void Initialize(int maxCount);
         
-        public IObject Spawn();
+        public IObject Spawn(string objectName);
         
         public void Despawn(object target);
         

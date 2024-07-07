@@ -12,10 +12,12 @@ namespace AOT.Framework.ObjectPool
         public short Priority => 2;
 
         private readonly Dictionary<TypeNamePair, IObjectPool> m_ObjectPools;
+        private readonly SortList<int, IObjectPool> m_PriorityObjectPools;
 
         public ObjectPoolManager()
         {
             m_ObjectPools = new Dictionary<TypeNamePair, IObjectPool>();
+            m_PriorityObjectPools = new SortList<int, IObjectPool>();
         }
         
         public void Init()
@@ -25,9 +27,10 @@ namespace AOT.Framework.ObjectPool
 
         public void Update(float virtualElapse, float realElapse)
         {
-            foreach (var objectPool in m_ObjectPools.Values)
+            //按照优先级遍历
+            foreach (var tuple in m_PriorityObjectPools.List)
             {
-                objectPool.Update(virtualElapse, realElapse);
+                tuple.Item2.Update(virtualElapse, realElapse);
             }
         }
 
@@ -38,6 +41,7 @@ namespace AOT.Framework.ObjectPool
                 objectPool.Destroy();
             }
             m_ObjectPools.Clear();
+            m_PriorityObjectPools.Clear();
         }
 
 
@@ -81,6 +85,7 @@ namespace AOT.Framework.ObjectPool
             }
             ObjectPool<T> objectPool = new ObjectPool<T>(name, priority, capacity, allowMultiSpawn, autoReleaseInterval, expireTime);
             m_ObjectPools.Add(typeNamePair, objectPool);
+            m_PriorityObjectPools.Add(priority, objectPool);
             return  objectPool;
         }
 
@@ -109,6 +114,7 @@ namespace AOT.Framework.ObjectPool
             Type objectPoolType = typeof(ObjectPool<>).MakeGenericType(objectType);
             IObjectPool objectPool = (IObjectPool)Activator.CreateInstance(objectPoolType, name, priority, capacity, allowMultiSpawn, autoReleaseInterval, expireTime);
             m_ObjectPools.Add(typeNamePair, objectPool);
+            m_PriorityObjectPools.Add(priority, objectPool);
             return  objectPool;
         }
 
@@ -145,10 +151,10 @@ namespace AOT.Framework.ObjectPool
             IObjectPool objectPool = null;
             if (m_ObjectPools.TryGetValue(typeNamePair, out objectPool))
             {
+                m_PriorityObjectPools.Remove(objectPool);
                 objectPool.Destroy();
                 return m_ObjectPools.Remove(typeNamePair);
             }
-
             return false;
         }
 
