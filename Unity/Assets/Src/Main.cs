@@ -1,10 +1,11 @@
 using System;
 using AOT.Framework;
-using Cysharp.Threading.Tasks;
+using AOT.Framework.Audio;
 using Src;
 using AOT.Framework.Debug;
 using AOT.Framework.Fsm;
 using AOT.Framework.Mvc;
+using AOT.Framework.ObjectPool;
 using AOT.Framework.Procedure;
 using AOT.Framework.Resource;
 using AOT.UI;
@@ -19,9 +20,11 @@ public class Main : MonoBehaviour
     [Header("资源加载模式")]
     public ResourceManager.ResourceRunningMode ResourceMode = ResourceManager.ResourceRunningMode.EDITOR;
 #endif
+
     [Header("日志过滤")]
     public LogType LogFilter = LogType.Log | LogType.Warning | LogType.Warning;
-    
+    [Header("音频组设置")]
+    public AudioGroupSetting[] audioGroupSettings = null;
     private void Awake()
     {
         EDebug.LogFilter = LogFilter;
@@ -36,16 +39,20 @@ public class Main : MonoBehaviour
 #endif
         GameEntry.CreatModule<MvcManager>();
         GameEntry.CreatModule<UIManager>();
+        GameEntry.CreatModule<ObjectPoolManager>();
+        GameEntry.CreatModule<AudioManager>();
     }
 
     
     void Start()
     {
         InitializeUI();
+        //初始化音频模块
+        GameEntry.GetModule<AudioManager>().Initialize(GameEntry.GetModule<ObjectPoolManager>(),audioGroupSettings);
         GameEntry.GetModule<ProcedureManager>().Initialize(typeof(VersionCheckProcedure)
             ,typeof(DownloadProcedure)
-            ,typeof(EnterGameProcedure));
-        GameEntry.GetModule<ProcedureManager>().StartProcedure<VersionCheckProcedure>();
+            ,typeof(EnterGameProcedure))
+            .StartProcedure<VersionCheckProcedure>();
     }
 
     /// <summary>
