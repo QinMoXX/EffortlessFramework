@@ -10,8 +10,7 @@ public class HotUpdateMain:IEntry
     {
         EDebug.Log("热更新代码加载成功");
         GameEntry.CreatModule<TableManager>().Initialize(GameEntry.GetModule<ResourceManager>());
-        GameEntry.GetModule<ProcedureManager>().Initialize(typeof(HomeMenuProcedure));
-        GameEntry.GetModule<ProcedureManager>().StartProcedure<HomeMenuProcedure>();
+        GameEntry.GetModule<ProcedureManager>().Initialize(typeof(HomeMenuProcedure)).StartProcedure<HomeMenuProcedure>();
         
     }
 
