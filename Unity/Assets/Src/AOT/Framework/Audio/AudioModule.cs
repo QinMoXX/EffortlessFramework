@@ -18,6 +18,7 @@ namespace AOT.Framework.Audio
         private Dictionary<string, AudioGroup> m_AudioGroupDict;
         public short Priority => 3;
         private AudioGroupSetting[] m_AudioGroupSettings;
+        private Transform m_ObjectPoolRoot;
         public void Init()
         {
             m_AudioObjectIdMap = new Dictionary<Guid, AudioObject>();
@@ -31,6 +32,10 @@ namespace AOT.Framework.Audio
             spatialAudioObjectPool = m_ObjectPoolManager.CreateObjectPool<AudioObject>("spatialAudioObjectPool", false, 10, 40, -1, 0);
             planeAudioObjectPool = m_ObjectPoolManager.CreateObjectPool<AudioObject>("planeAudioObjectPool", true, 10, 100, 1000, 1000);
             InitAudioGroup();
+            //创建音频对象池物理挂在对象
+            m_ObjectPoolRoot = new GameObject("AudioObjectPoolRoot").transform;
+            m_ObjectPoolRoot.SetParent(ObjectPoolManager.Root,false);
+            AudioObject.AudioRoot = m_ObjectPoolRoot;
             return this;
         }
 
@@ -48,8 +53,8 @@ namespace AOT.Framework.Audio
                 {
                     continue;
                 }
-                spatialAudioObjectPool.Despawn(audioObject);
-                planeAudioObjectPool.Despawn(audioObject);
+                spatialAudioObjectPool.Despawn(audioObject.Target);
+                planeAudioObjectPool.Despawn(audioObject.Target);
                 m_AudioObjectIdMap.Remove(guids[i]);
             }
         }
@@ -63,6 +68,8 @@ namespace AOT.Framework.Audio
             m_ObjectPoolManager = null;
             m_AudioGroupDict.Clear();
             m_AudioGroupDict = null;
+            m_ObjectPoolRoot = null;
+            AudioObject.AudioRoot = null;
         }
         
 

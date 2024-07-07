@@ -26,12 +26,10 @@ namespace AOT.Framework.Audio
             GameObject audioObject = new GameObject(AUDIO_PR+name);
             audioObject.transform.position = new Vector3();
             if (AudioRoot)audioObject.transform.SetParent(AudioRoot,false);
-            audioObject.SetActive(false);
             m_audioSource = audioObject.AddComponent<AudioSource>();
             m_audioSource.loop = false;
             m_audioSource.playOnAwake = false;
             m_audioSource.clip = audioClip;
-            
             Target = audioObject;
             cts = new CancellationTokenSource();
         }

@@ -81,12 +81,14 @@ namespace AOT.Framework.ObjectPool
 
             public void OnSpawn()
             {
+                m_Object.OnSpawn();
                 m_LastUseTime = DateTime.UtcNow;
                 m_ReferenceCount++;
             }
 
             public void OnDespawn()
             {
+                m_Object.OnDespawn();
                 m_LastUseTime = DateTime.UtcNow;
                 m_ReferenceCount--;
             }

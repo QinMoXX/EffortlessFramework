@@ -1,11 +1,14 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace AOT.Framework.ObjectPool
 {
     public partial class ObjectPoolManager:IGameModule,IObjectPoolManager
     {
+        public static Transform Root;
         private const int DefaultCapacity = int.MaxValue;
         private const float DefaultExpireTime = float.MaxValue;
         private const int DefaultPriority = 0;
@@ -22,7 +25,9 @@ namespace AOT.Framework.ObjectPool
         
         public void Init()
         {
-            
+            Root = new GameObject("ObjectPoolRoot").transform;
+            Root.position = new  Vector3();
+            Object.DontDestroyOnLoad(Root);
         }
 
         public void Update(float virtualElapse, float realElapse)
