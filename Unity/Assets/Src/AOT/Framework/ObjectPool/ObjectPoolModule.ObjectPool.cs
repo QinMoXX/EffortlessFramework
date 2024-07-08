@@ -145,11 +145,7 @@ namespace AOT.Framework.ObjectPool
             public IObject Spawn(string objectName)
             {
                 Object<T> obj = null;
-                if (!m_ObjectBucket.TryGetValue(objectName, out var objectList))
-                {
-                    obj = CreateObject(objectName);
-                }
-                else
+                if (m_ObjectBucket.TryGetValue(objectName, out var objectList))
                 {
                     foreach (var internalObject in objectList)
                     {
@@ -160,6 +156,11 @@ namespace AOT.Framework.ObjectPool
                         }
                     }
                 }
+                if (obj == null)
+                {
+                    obj = CreateObject(objectName);
+                }
+                
                 obj.OnSpawn();
                 return  obj;
             }
@@ -245,9 +246,9 @@ namespace AOT.Framework.ObjectPool
                 if (expireTime > DateTime.MinValue)
                 {
                     //根据过期时间 释放过期对象
-                    for (int i = m_CachedCanReleaseObjects.Count - 1; i > 0; i--)
+                    for (int i = m_CachedCanReleaseObjects.Count - 1; i >= 0; i--)
                     {
-                        if (m_CachedCanReleaseObjects[i].LastUseTime <= expireTime)
+                        if (m_CachedCanReleaseObjects[i].LastUseTime >= expireTime)
                         {
                             m_CachedCanToReleaseObjects.Add(m_CachedCanReleaseObjects[i]);
                             m_CachedCanReleaseObjects.RemoveAt(i);
@@ -258,7 +259,7 @@ namespace AOT.Framework.ObjectPool
                 //根据数量 补充释放对象
                 if (toReleaseCount > 0 && m_CachedCanReleaseObjects.Count > 0)
                 {
-                    for (int i = m_CachedCanReleaseObjects.Count-1; i > 0 & toReleaseCount > 0; i--)
+                    for (int i = m_CachedCanReleaseObjects.Count-1; i >= 0 & toReleaseCount > 0; i--)
                     {
                         m_CachedCanToReleaseObjects.Add(m_CachedCanReleaseObjects[i]);
                         toReleaseCount--;
@@ -300,7 +301,7 @@ namespace AOT.Framework.ObjectPool
             public void Update(float virtualElapseSeconds, float realElapseSeconds)
             {
                 m_AutoReleaseTime += realElapseSeconds;
-                if (m_AutoReleaseTime < m_AutoReleaseInterval)
+                if (m_AutoReleaseInterval < 0 | m_AutoReleaseTime < m_AutoReleaseInterval)
                 {
                     return;
                 }
