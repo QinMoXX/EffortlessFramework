@@ -3,6 +3,7 @@ using System.Threading;
 using AOT.Framework.ObjectPool;
 using AOT.Framework.Resource;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 namespace AOT.Framework.Audio
@@ -74,14 +75,19 @@ namespace AOT.Framework.Audio
             {
                 m_audioSource.Stop();
             }
-            cts.Cancel();
-            cts.Dispose();
+
+            if (cts != null)
+            {
+                cts.Cancel();
+                cts.Dispose();
+                cts = null;
+            }
             
             if (Target != null)
             {
                 GameObject.Destroy(Target as GameObject);
             }
-            cts = null;
+            
             Target = null;
             m_audioSource = null;
         }
@@ -102,12 +108,14 @@ namespace AOT.Framework.Audio
         {
             // 取消之前的播放控制任务，以确保不会同时进行多个播放操作
             cts.Cancel();
+            cts.Dispose();
             // 开始播放音频
             m_audioSource.Play();
             if (fadeInSeconds > 0)
             {
                 // 如果需要淡入，则先将音量设置为0，然后开始淡入操作
                 m_audioSource.volume = 0;
+                cts = new CancellationTokenSource();
                 VolumeAsync(fadeInSeconds,true,null ,cts.Token).Forget();
             }
             else
@@ -130,8 +138,10 @@ namespace AOT.Framework.Audio
                 return;
             }
             cts.Cancel();
+            cts.Dispose();
             if (fadeOutSeconds > 0)
             {
+                cts = new CancellationTokenSource();
                 VolumeAsync(fadeOutSeconds, false, () => { m_audioSource.Stop(); }, cts.Token).Forget();
             }
             else
@@ -147,8 +157,10 @@ namespace AOT.Framework.Audio
         public void Pause(float fadeOutSeconds = 0)
         {
             cts.Cancel();
+            cts.Dispose();
             if (fadeOutSeconds > 0)
             {
+                cts = new CancellationTokenSource();
                 VolumeAsync(fadeOutSeconds, false, () => { m_audioSource.Pause(); }, cts.Token).Forget();
             }
             else
@@ -165,8 +177,10 @@ namespace AOT.Framework.Audio
         {
             m_audioSource.Play();
             cts.Cancel();
+            cts.Dispose();
             if (fadeOutSeconds > 0)
             {
+                cts = new CancellationTokenSource();
                 VolumeAsync(fadeOutSeconds, true, null, cts.Token).Forget();
             }
             else
@@ -194,7 +208,7 @@ namespace AOT.Framework.Audio
 
         
 
-        public async UniTaskVoid VolumeAsync(float fadeSeconds,bool isIn,Action onComplete ,CancellationToken ctk)
+        public async UniTask VolumeAsync(float fadeSeconds,bool isIn,Action onComplete ,CancellationToken ctk)
         {
             float timer = 0;
             float fromValue = m_audioSource.volume,toValue = 1;
@@ -202,12 +216,15 @@ namespace AOT.Framework.Audio
             {
                 toValue = 0;
             }
-            
             while (timer < fadeSeconds)
             {
+                if (ctk.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
                 timer += Time.deltaTime;
                 m_audioSource.volume = Mathf.SmoothStep(fromValue, toValue, timer / fadeSeconds);
-                await UniTask.Yield(ctk);
+                await UniTask.Yield();
             }
             onComplete?.Invoke();
             
