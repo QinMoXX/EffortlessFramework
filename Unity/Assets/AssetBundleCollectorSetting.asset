@@ -63,3 +63,16 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+    - GroupName: Audio
+      GroupDesc: "\u97F3\u9891"
+      AssetTags: Audio
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Res/Audio
+        CollectorGUID: f07c8b0d49f04e44cb7583d115582925
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
