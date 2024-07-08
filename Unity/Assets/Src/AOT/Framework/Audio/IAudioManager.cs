@@ -7,7 +7,7 @@ namespace AOT.Framework.Audio
     {
         public IAudioManager Initialize(IObjectPoolManager resourceManager,object param);
         
-        public Guid PlayAudio(string audioName, string groupName, float fadeInSeconds);
+        public IAudioHandle PlayAudio(string audioName, string groupName, float fadeInSeconds);
         
         public void StopAudio(Guid audioId, float fadeOutSeconds);
 

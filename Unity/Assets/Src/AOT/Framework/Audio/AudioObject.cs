@@ -13,9 +13,16 @@ namespace AOT.Framework.Audio
         public static Transform AudioRoot;
         private const string AUDIO_PR = "[Audio]";
         private AudioSource m_audioSource;
-
         private CancellationTokenSource cts;
+        internal Guid m_guid;
         
+        /// <summary>
+        /// 获取音频对象的唯一标识符。
+        /// </summary>
+        public Guid Guid
+        {
+            get => m_guid;
+        }
         /// <summary>
         /// 初始化音频对象。
         /// </summary>

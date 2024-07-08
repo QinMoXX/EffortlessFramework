@@ -1,7 +1,19 @@
+using System;
+
 namespace AOT.Framework.Audio
 {
     public interface IAudioHandle
     {
+        /// <summary>
+        /// 唯一标识
+        /// </summary>
+        public Guid Guid { get; }
+        
+        /// <summary>
+        /// 获取目标对象实体
+        /// </summary>
+        public  object Target { get; }
+        
         /// <summary>
         /// 播放
         /// </summary>

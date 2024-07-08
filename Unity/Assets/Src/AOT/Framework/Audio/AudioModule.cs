@@ -29,8 +29,8 @@ namespace AOT.Framework.Audio
         {
             m_ObjectPoolManager = resourceManager;
             m_AudioGroupSettings = param as AudioGroupSetting[];
-            spatialAudioObjectPool = m_ObjectPoolManager.CreateObjectPool<AudioObject>("spatialAudioObjectPool", false, 10, 40, -1, 0);
-            planeAudioObjectPool = m_ObjectPoolManager.CreateObjectPool<AudioObject>("planeAudioObjectPool", true, 10, 100, 1000, 1000);
+            spatialAudioObjectPool = m_ObjectPoolManager.CreateObjectPool<AudioObject>("spatialAudioObjectPool", false, 10, 40, 5, 10);
+            planeAudioObjectPool = m_ObjectPoolManager.CreateObjectPool<AudioObject>("planeAudioObjectPool", true, 10, 100, 20, 20);
             InitAudioGroup();
             //创建音频对象池物理挂在对象
             m_ObjectPoolRoot = new GameObject("AudioObjectPoolRoot").transform;
@@ -73,7 +73,7 @@ namespace AOT.Framework.Audio
         }
         
 
-        public Guid PlayAudio(string audioName, string groupName, float fadeInSeconds = 0)
+        public IAudioHandle PlayAudio(string audioName, string groupName, float fadeInSeconds = 0)
         {
             if (string.IsNullOrEmpty(audioName))
             {
@@ -104,8 +104,9 @@ namespace AOT.Framework.Audio
             audioObject.SetOutput(audioGroup);
             audioObject.Play(fadeInSeconds);
             Guid guid = Guid.NewGuid();
+            audioObject.m_guid = guid;
             m_AudioObjectIdMap.Add(guid, audioObject);
-            return guid;
+            return audioObject;
         }
 
         public void StopAudio(Guid audioId, float fadeOutSeconds = 0)
