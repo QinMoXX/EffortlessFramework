@@ -29,6 +29,11 @@ public class RuntimeInspector
             }
         }
         Debug.Log("代码检查无误");
+        
+        
+        MessageIdTracker messageIdTracker = new MessageIdTracker();
+        messageIdTracker.TrackMessageId(assembly);
+        Debug.Log("消息ID检查无误");
     }
     
     
@@ -68,6 +73,38 @@ public class DependencyTracker
     public Dictionary<Type, HashSet<Type>> GetDependencies()
     {
         return _dependencies;
+    }
+}
+
+public class MessageIdTracker
+{
+    private readonly Dictionary<int, Type> _messageId;
+
+    public MessageIdTracker()
+    {
+        _messageId = new Dictionary<int, Type>();
+    }
+
+    public void TrackMessageId(Assembly assembly)
+    {
+        foreach (var type in assembly.GetTypes())
+        {
+            var packetIdAttributes = (PacketIdAttribute[])type.GetCustomAttributes(typeof(PacketIdAttribute), false);
+            if (packetIdAttributes.Length > 0)
+            {
+                foreach (var attribute in packetIdAttributes)
+                {
+                    Debug.Log($"{type.FullName} MessageId:{attribute.MessageId}");
+                    if (_messageId.TryGetValue(attribute.MessageId, out var attributeType))
+                    {
+                        throw new GameFrameworkException(
+                            $"{type.FullName} and {attributeType.FullName} have the same message ID:{attribute.MessageId}");
+                    }
+
+                    _messageId.TryAdd(attribute.MessageId, type);
+                }
+            }
+        }
     }
 }
 
