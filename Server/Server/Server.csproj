@@ -17,4 +17,23 @@
       <PackageReference Include="UniTask" Version="2.5.5" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Include="..\..\Unity\Assets\Src\AOT\Framework\Base\Attribute\PacketIdAttribute.cs">
+        <Link>Core\PacketIdAttribute.cs</Link>
+      </Compile>
+      <Compile Include="..\..\Unity\Assets\Src\AOT\Framework\Network\INetSession.cs">
+        <Link>Network\INetSession.cs</Link>
+      </Compile>
+      <Compile Include="..\..\Unity\Assets\Src\HotUpdate\Net\NetPacket.cs">
+        <Link>Message\NetPacket.cs</Link>
+      </Compile>
+      <Compile Include="..\..\Unity\Assets\Src\HotUpdate\Net\NetworkMessages.cs">
+        <Link>Message\NetworkMessages.cs</Link>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Service\" />
+    </ItemGroup>
+
 </Project>
