@@ -1,4 +1,3 @@
-using AOT.Framework.Network;
 using MemoryPack;
 
 namespace HotUpdate.Network.Message

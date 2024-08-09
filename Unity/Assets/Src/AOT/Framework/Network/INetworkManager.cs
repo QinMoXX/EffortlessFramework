@@ -5,10 +5,10 @@ namespace AOT.Framework.Network
 {
     public interface INetworkManager
     {
-        public INetworkChannel CreateChannel<T>(int channelId,string address, int port) where T : INetworkChannel;
+        public INetworkChannel AddChannel(int channelId, INetworkChannel channel);
         
         public INetworkChannel GetChannel(int channelId);
         
-        public void GetAllNetworkChannels(List<INetworkChannel> results);
+        public IList<INetworkChannel> GetAllNetworkChannels();
     }
 }

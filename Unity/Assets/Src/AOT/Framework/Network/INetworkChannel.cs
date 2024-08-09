@@ -9,9 +9,9 @@ namespace AOT.Framework.Network
         
         public bool Connect(int port, IPEndPoint endPoint);
 
-        public UniTaskVoid SendAsync(byte[] data);
+        public UniTaskVoid SendAsync(int id,byte[] data);
 
-        public void Send(byte[] data);
+        public void Send(int id,byte[] data);
 
         public UniTask<byte[]> ReceiveAsync();
 

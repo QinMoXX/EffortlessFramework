@@ -30,5 +30,10 @@ namespace HotUpdate.Network
                 handler(data);
             }
         }
+
+        public void Dispatch(int messageId, string data)
+        {
+            return;
+        }
     }
 }
