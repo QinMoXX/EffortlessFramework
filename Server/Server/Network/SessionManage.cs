@@ -22,13 +22,18 @@ namespace AOT.Framework.Network
             sessions.TryAdd(id, session);
         }
 
-        public NetSession? GetSession(int id)
+        public NetSession GetSession(int id)
         {
             if (sessions.TryGetValue(id, out var session))
             {
                 return session;
             }
             return null;
+        }
+        
+        public NetSession[] GetAllSessions()
+        {
+            return sessions.Values.ToArray();
         }
 
         public bool HasSession(int id)

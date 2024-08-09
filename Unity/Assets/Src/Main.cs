@@ -5,11 +5,13 @@ using Src;
 using AOT.Framework.Debug;
 using AOT.Framework.Fsm;
 using AOT.Framework.Mvc;
+using AOT.Framework.Network;
 using AOT.Framework.ObjectPool;
 using AOT.Framework.Procedure;
 using AOT.Framework.Resource;
 using AOT.UI;
 using Framework.UI;
+using HotUpdate.Network;
 using HotUpdate.UI.View;
 using UnityEngine;
 using LogType = AOT.Framework.Debug.LogType;
@@ -41,6 +43,7 @@ public class Main : MonoBehaviour
         GameEntry.CreatModule<UIManager>();
         GameEntry.CreatModule<ObjectPoolManager>();
         GameEntry.CreatModule<AudioManager>();
+        GameEntry.CreatModule<NetworkManager>().Initialize();
     }
 
     
@@ -53,6 +56,11 @@ public class Main : MonoBehaviour
             ,typeof(DownloadProcedure)
             ,typeof(EnterGameProcedure))
             .StartProcedure<VersionCheckProcedure>();
+        
+        // 测试网络
+        var endPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, 40001);
+        KcpChannel channel = new KcpChannel(5001, endPoint);
+        GameEntry.GetModule<NetworkManager>().AddChannel(1, channel);
     }
 
     /// <summary>

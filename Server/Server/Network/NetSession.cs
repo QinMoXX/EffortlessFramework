@@ -2,13 +2,15 @@ using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.Sockets.Kcp;
-using HotUpdate.Network.Message;
+using Cysharp.Threading.Tasks;
+using System.Diagnostics;
 using MemoryPack;
 
 namespace AOT.Framework.Network
 {
-    public class NetSession:IDisposable,IKcpCallback
+    public class NetSession:IDisposable,INetSession,IKcpCallback
     {
+        const int conv = 2001;
         private int m_sessionId;
         private IPEndPoint m_endPoint;
         private NetworkService m_service;
@@ -35,18 +37,19 @@ namespace AOT.Framework.Network
             get => m_endPoint;
         }
         
-        public NetSession(int sessionId, IPEndPoint endPoint, NetworkService service, UdpClient client,SimpleSegManager.Kcp kcp)
+        public NetSession(int sessionId, IPEndPoint endPoint, NetworkService service, UdpClient client)
         {
             this.m_sessionId = sessionId;
             this.m_endPoint = endPoint;
             this.m_service = service;
             m_isConnected = true;
             this.m_client = client;
-            this.kcp = kcp;
+            
+            this.kcp = new SimpleSegManager.Kcp(conv, this);
         }
         
 
-        public async Task SendAsync<T>(int id, T messagePack) where T : NetPacket
+        public async UniTask SendMessage<T>(int id, T messagePack)
         {
             if (messagePack == null)
             {
@@ -66,6 +69,11 @@ namespace AOT.Framework.Network
         {
             
         }
+        
+        public void Update(in DateTimeOffset time)
+        {
+            kcp.Update(time);
+        }
 
         public void Dispose()
         {
@@ -77,7 +85,7 @@ namespace AOT.Framework.Network
         public void Output(IMemoryOwner<byte> buffer, int avalidLength)
         {
             var s = buffer.Memory.Span.Slice(0, avalidLength).ToArray();
-            m_client.SendAsync(s, s.Length, this.m_endPoint);
+            m_client.SendAsync(s, s.Length, m_endPoint);
             buffer.Dispose();
         }
     }

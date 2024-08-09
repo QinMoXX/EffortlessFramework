@@ -1,6 +1,5 @@
 using HotUpdate.Network;
-
-namespace TestServer;
+using HotUpdate.Network.Message;
 
 public class GameServer:IDisposable
 {
@@ -12,11 +11,12 @@ public class GameServer:IDisposable
 
     public void Start()
     {
-        NetworkDispatcher networkDispatcher = new NetworkDispatcher();
-        m_networkService = new NetworkService(40001, networkDispatcher);
+        m_networkService = new NetworkService(40001, NetworkDispatcher.Instance);
         m_networkService.Start();
         
         Console.WriteLine("GameServer Start");
+        
+        NetworkDispatcher.Instance.SubscribeMessage<ReqLogin>((int)NetworkMessageIds.ReqLogin, NetworkDispatcher.OnReqLogin);
     }
 
     public void Update()

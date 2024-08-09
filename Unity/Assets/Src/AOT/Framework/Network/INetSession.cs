@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+
 namespace AOT.Framework.Network
 {
     /// <summary>
@@ -19,5 +21,16 @@ namespace AOT.Framework.Network
         /// 心跳检测
         /// </summary>
         public void HeartbeatCheck();
+
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="id">消息Id</param>
+        /// <param name="messagePack">消息包</param>
+        /// <typeparam name="T">消息包类型</typeparam>
+        /// <returns></returns>
+        public UniTask SendMessage<T>(int id, T messagePack);
+
+
     }
 }

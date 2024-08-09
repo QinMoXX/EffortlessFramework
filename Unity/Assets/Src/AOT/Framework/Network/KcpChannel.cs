@@ -40,6 +40,14 @@ public class KcpChannel : IKcpCallback,INetworkChannel
             client = new UdpClient(port);
             Kcp = new SimpleSegManager.Kcp(2001, this);
             EndPoint = endPoint;
+            UniTask.RunOnThreadPool(async () =>
+            {
+                while (true)
+                {
+                    Kcp.Update(DateTimeOffset.UtcNow);
+                    await UniTask.Delay(10);
+                }
+            });
             UniTask.RunOnThreadPool(BeginRecv);
         }
         catch (Exception e)
@@ -130,7 +138,7 @@ public class KcpChannel : IKcpCallback,INetworkChannel
         result[1] = (byte)((id >> 8) & 0xFF);   // 取次低字节
         result[2] = (byte)((id >> 16) & 0xFF);  // 取次高字节
         result[3] = (byte)((id >> 24) & 0xFF);  // 取最高字节
-        EDebug.Log("result[4]: {result[4].ToString() }");
+
         Buffer.BlockCopy(bin, 0, result, 4, bin.Length);
         return result;
     }

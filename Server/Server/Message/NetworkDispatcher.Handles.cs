@@ -5,9 +5,11 @@ namespace HotUpdate.Network
 {
     public partial class NetworkDispatcher:INetworkDispatcher
     {
-        public void ReqLogin(INetSession session, ResLogin resLogin)
+        public static void OnReqLogin(INetSession session, ReqLogin resLogin)
         {
-            
+            Console.WriteLine($"OnReqLogin: {resLogin.name} {resLogin.password}");
+            session.SendMessage<ResLogin>((int)NetworkMessageIds.ResLogin,
+                new ResLogin {  result = true });
         }
     }
 }

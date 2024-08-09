@@ -1,3 +1,4 @@
+using AOT.Framework.Debug;
 using AOT.Framework.Network;
 using HotUpdate.Network.Message;
 
@@ -5,9 +6,9 @@ namespace HotUpdate.Network
 {
     public partial class NetworkDispatcher:INetworkDispatcher
     {
-        public void ResLogin(ResLogin resLogin)
+        public static void OnResLogin(ResLogin resLogin)
         {
-            
+            EDebug.Log($"OnResLogin: {resLogin.result}");
         }
     }
 }

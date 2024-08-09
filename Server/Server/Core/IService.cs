@@ -1,4 +1,4 @@
-namespace GameServer.Core
+namespace AOT.Framework.Network
 {
     public interface IService
     {

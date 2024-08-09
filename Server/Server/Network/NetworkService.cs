@@ -1,8 +1,8 @@
 using System.Buffers;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net.Sockets.Kcp;
 using AOT.Framework.Network;
-using GameServer.Core;
 using HotUpdate.Network.Message;
 
 public class NetworkService: IService,IKcpCallback
@@ -20,15 +20,20 @@ public class NetworkService: IService,IKcpCallback
 
     public void Start()
     {
-        Task.Run(BeginRecv);
         Task.Run(async () =>
         {
             while (true)
             {
                 kcp.Update(DateTimeOffset.UtcNow);
+                NetSession[] sessions = SessionManage.Instance.GetAllSessions();
+                for (int i = 0; i < sessions.Length; i++)
+                {
+                    sessions[i].Update(DateTimeOffset.UtcNow);
+                }
                 await Task.Delay(10);
             }
         });
+        BeginRecv();
     }
 
     public void Update()
@@ -46,7 +51,7 @@ public class NetworkService: IService,IKcpCallback
         m_networkDispatcher = networkDispatcher;
         m_client = new UdpClient(port);
         kcp = new SimpleSegManager.Kcp(2001, this);
-        
+        kcp.TraceListener = new ConsoleTraceListener();
     }
 
     public void Output(IMemoryOwner<byte> buffer, int avalidLength)
@@ -54,11 +59,6 @@ public class NetworkService: IService,IKcpCallback
         var s = buffer.Memory.Span.Slice(0, avalidLength).ToArray();
         m_client.SendAsync(s, s.Length, null);
         buffer.Dispose();
-    }
-
-    private async void SendAsync<T>(NetSession session, int id,T messagePack) where  T : NetPacket
-    {
-        await session.SendAsync<T>(id, messagePack);
     }
 
     private async ValueTask<byte[]> ReceiveAsync(NetSession session)
@@ -80,10 +80,10 @@ public class NetworkService: IService,IKcpCallback
         {
             var res = await m_client.ReceiveAsync();
             int sessionId = SessionManage.GetSessionId(res.RemoteEndPoint);
-            NetSession? session = SessionManage.Instance.GetSession(sessionId);
+            NetSession session = SessionManage.Instance.GetSession(sessionId);
             if (session == null)
             {
-                session = new NetSession(sessionId, res.RemoteEndPoint, this, m_client, kcp);
+                session = new NetSession(sessionId, res.RemoteEndPoint, this, m_client);
                 SessionManage.Instance.AddSession(session.SessionId, session);
             }
             kcp.Input(res.Buffer);

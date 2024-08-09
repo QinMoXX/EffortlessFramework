@@ -8,6 +8,10 @@ namespace AOT.Framework
 		{
 			get
 			{
+				if (_instance == null)
+				{
+					_instance = Activator.CreateInstance<T>();
+				}
 				return _instance;
 			}
 			set
@@ -15,13 +19,7 @@ namespace AOT.Framework
 				_instance = value;
 			}
 		}
-
-		protected SingletonInstance()
-		{
-			if (_instance != null)
-				throw new Exception(Utility.String.Format("{0} instance already created.",typeof(T)));
-			_instance = this as T;
-		}
+		
 		protected void DestroyInstance()
 		{
 			_instance = null;

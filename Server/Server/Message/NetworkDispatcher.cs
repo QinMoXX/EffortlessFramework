@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using AOT.Framework;
 using AOT.Framework.Network;
 using HotUpdate.Network.Message;
@@ -13,7 +11,7 @@ namespace HotUpdate.Network
         public delegate void MessageHandler(INetSession session,byte[] data);
         
         private readonly  Dictionary<int, MessageHandler> m_messageHandlers;
-        public NetworkDispatcher()
+        public NetworkDispatcher():base()
         {
             m_messageHandlers = new Dictionary<int, MessageHandler>();
         }

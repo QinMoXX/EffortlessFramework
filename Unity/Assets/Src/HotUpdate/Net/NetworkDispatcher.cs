@@ -42,7 +42,6 @@ namespace HotUpdate.Network
             }
         }
         
-        
         public void Dispatch(int messageId, byte[] data)
         {
             if (m_messageHandlers.TryGetValue(messageId, out var handler))
