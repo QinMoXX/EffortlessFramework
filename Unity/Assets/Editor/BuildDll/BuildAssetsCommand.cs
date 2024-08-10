@@ -54,7 +54,7 @@ namespace HybridCLR.Editor
         {
             var target = EditorUserBuildSettings.activeBuildTarget;
             string aotAssembliesSrcDir = SettingsUtil.GetAssembliesPostIl2CppStripDir(target);
-            string aotAssembliesDstDir = Application.streamingAssetsPath;
+            // string aotAssembliesDstDir = Application.streamingAssetsPath;
             string scriptResPath = Application.dataPath + "/Res/Src";
             if (!Directory.Exists(Application.streamingAssetsPath))
             {
@@ -69,11 +69,11 @@ namespace HybridCLR.Editor
                     Debug.LogError($"ab中添加AOT补充元数据dll:{srcDllPath} 时发生错误,文件不存在。裁剪后的AOT dll在BuildPlayer时才能生成，因此需要你先构建一次游戏App后再打包。");
                     continue;
                 }
-                string dllBytesPath = $"{aotAssembliesDstDir}/{dll}.dll.bytes";
+                // string dllBytesPath = $"{aotAssembliesDstDir}/{dll}.dll.bytes";
                 string dllBytesResPath = $"{scriptResPath}/{dll}.dll.bytes";
-                File.Copy(srcDllPath, dllBytesPath, true);
+                // File.Copy(srcDllPath, dllBytesPath, true);
                 File.Copy(srcDllPath, dllBytesResPath, true);
-                Debug.Log($"[CopyAOTAssembliesToStreamingAssets] copy AOT dll {srcDllPath} -> {dllBytesPath}");
+                Debug.Log($"[CopyAOTAssembliesToSrcAssets] copy AOT dll {srcDllPath} -> {dllBytesResPath}");
             }
         }
 
@@ -92,19 +92,5 @@ namespace HybridCLR.Editor
             }
         }
         
-        public static void CopyAssetBundlesToStreamingAssets(BuildTarget target)
-        {
-            string streamingAssetPathDst = Application.streamingAssetsPath;
-            Directory.CreateDirectory(streamingAssetPathDst);
-            string outputDir = GetAssetBundleOutputDirByTarget(target);
-            var abs = new string[] { "prefabs" };
-            foreach (var ab in abs)
-            {
-                string srcAb = ToRelativeAssetPath($"{outputDir}/{ab}");
-                string dstAb = ToRelativeAssetPath($"{streamingAssetPathDst}/{ab}");
-                Debug.Log($"[CopyAssetBundlesToStreamingAssets] copy assetbundle {srcAb} -> {dstAb}");
-                AssetDatabase.CopyAsset( srcAb, dstAb);
-            }
-        }
     }
 }
