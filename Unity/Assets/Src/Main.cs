@@ -16,10 +16,8 @@ using LogType = AOT.Framework.Debug.LogType;
 
 public class Main : MonoBehaviour
 {
-#if UNITY_EDITOR
     [Header("资源加载模式")]
     public ResourceManager.ResourceRunningMode ResourceMode = ResourceManager.ResourceRunningMode.EDITOR;
-#endif
 
     [Header("日志过滤")]
     public LogType LogFilter = LogType.Log | LogType.Warning | LogType.Warning;
@@ -35,13 +33,7 @@ public class Main : MonoBehaviour
         EDebug.LogFilter = LogFilter;
         GameEntry.CreatModule<FsmManager>();
         GameEntry.CreatModule<ProcedureManager>();
-        var resourceManager = GameEntry.CreatModule<ResourceManager>();
-        //设置热更模式
-#if UNITY_EDITOR
-        resourceManager?.SetMode(ResourceMode);
-#else
-        resourceManager.SetMode(ResourceManager.ResourceRunningMode.ONLINE);
-#endif
+        GameEntry.CreatModule<ResourceManager>().SetMode(ResourceMode);
         GameEntry.CreatModule<MvcManager>();
         GameEntry.CreatModule<UIManager>();
         GameEntry.CreatModule<ObjectPoolManager>();

@@ -554,6 +554,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8605435247997535667, guid: 87d5c71b6140c764fb99f3d0f1dadcf3,
         type: 3}
+      propertyPath: Port
+      value: 5001
+      objectReference: {fileID: 0}
+    - target: {fileID: 8605435247997535667, guid: 87d5c71b6140c764fb99f3d0f1dadcf3,
+        type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -566,7 +571,7 @@ PrefabInstance:
     - target: {fileID: 8605435247997535667, guid: 87d5c71b6140c764fb99f3d0f1dadcf3,
         type: 3}
       propertyPath: ResourceMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8605435247997535667, guid: 87d5c71b6140c764fb99f3d0f1dadcf3,
         type: 3}
