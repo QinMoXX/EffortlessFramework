@@ -27,6 +27,7 @@ MonoBehaviour:
   - mscorlib
   - System
   - System.Core
+  - MemoryPack.Core
   outputLinkFile: HybridCLRGenerate/link.xml
   outputAOTGenericReferenceFile: HybridCLRGenerate/AOTGenericReferences.cs
   maxGenericReferenceIteration: 10

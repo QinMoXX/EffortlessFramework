@@ -60,6 +60,7 @@ namespace Src
                 "mscorlib.dll",
                 "System.dll",
                 "System.Core.dll", // 如果使用了Linq，需要这个
+                "MemoryPack.Core.dll"
                 // "Newtonsoft.Json.dll", 
                 // "protobuf-net.dll",
             };
