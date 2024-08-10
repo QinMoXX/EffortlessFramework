@@ -11,6 +11,7 @@ namespace AOT.Framework.Resource
         public short Priority => 1;
 
         public string packageVersion;
+        public const string DEFAULT_PACKAGE_NAME = "DefaultPackage";
 
         public ResourcePackage DefaultPackage { get;private set; }
         public bool IsInitialize { get;private set; }
@@ -41,10 +42,15 @@ namespace AOT.Framework.Resource
         {
             // 初始化资源系统
             YooAssets.Initialize();
-            // 创建默认的资源包
-            DefaultPackage = YooAssets.CreatePackage("DefaultPackage");
+            DefaultPackage = YooAssets.TryGetPackage(DEFAULT_PACKAGE_NAME);
+            if (DefaultPackage == null)
+            {
+                // 创建默认的资源包
+                DefaultPackage = YooAssets.CreatePackage("DefaultPackage");
+            }
             // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
             YooAssets.SetDefaultPackage(DefaultPackage);
+
             if (m_mode == ResourceRunningMode.STANDALONE)
             {
                 //单机模式运行
@@ -52,7 +58,7 @@ namespace AOT.Framework.Resource
                 var initParameters = new OfflinePlayModeParameters();
                 initParameters.BuildinFileSystemParameters = buildinFileSystem;
                 var initOperation = DefaultPackage.InitializeAsync(initParameters);
-
+                await initOperation.ToUniTask();
                 if (initOperation.Status == EOperationStatus.Succeed)
                 {
                     IsInitialize = true;
@@ -80,7 +86,7 @@ namespace AOT.Framework.Resource
                 EditorSimulateModeParameters initParameters = new EditorSimulateModeParameters();
                 initParameters.EditorFileSystemParameters = editorFileSystem;
                 var initOperation = DefaultPackage.InitializeAsync(initParameters);
-                await initOperation;
+                await initOperation.ToUniTask();
                 if (initOperation.Status == EOperationStatus.Succeed)
                 {
                     EDebug.Log("EDITOR ResourceManager Initialize Success.");
