@@ -56,7 +56,7 @@ namespace Src
         {
             var resourceManager = GameEntry.GetModule<ResourceManager>();
             var package = resourceManager.DefaultPackage;
-            var operation = package.UpdatePackageVersionAsync();
+            var operation = package.RequestPackageVersionAsync();
             await operation.ToUniTask();
             if (operation.Status != EOperationStatus.Succeed)
             {
@@ -65,8 +65,7 @@ namespace Src
                 return string.Empty;
             }
             //更新成功
-            string packageVersion = operation.PackageVersion;
-            return packageVersion;
+            return operation.PackageVersion;
         }
     }
 }

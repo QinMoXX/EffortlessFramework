@@ -11,8 +11,6 @@ using AOT.Framework.Procedure;
 using AOT.Framework.Resource;
 using AOT.UI;
 using Framework.UI;
-using HotUpdate.Network;
-using HotUpdate.UI.View;
 using UnityEngine;
 using LogType = AOT.Framework.Debug.LogType;
 
@@ -27,6 +25,11 @@ public class Main : MonoBehaviour
     public LogType LogFilter = LogType.Log | LogType.Warning | LogType.Warning;
     [Header("音频组设置")]
     public AudioGroupSetting[] audioGroupSettings = null;
+    [Header("Host")]
+    public int EndPort = 40001;
+
+    public int Port = 5001;
+    
     private void Awake()
     {
         EDebug.LogFilter = LogFilter;
@@ -49,7 +52,8 @@ public class Main : MonoBehaviour
     
     void Start()
     {
-        InitializeUI();
+        UIManager uiManager = GameEntry.GetModule<UIManager>();
+        uiManager.Initialize(new UIGroupHelper(),new UIFormHelper(uiManager,GameEntry.GetModule<ResourceManager>()));
         //初始化音频模块
         GameEntry.GetModule<AudioManager>().Initialize(GameEntry.GetModule<ObjectPoolManager>(),audioGroupSettings);
         GameEntry.GetModule<ProcedureManager>().Initialize(typeof(VersionCheckProcedure)
@@ -58,25 +62,11 @@ public class Main : MonoBehaviour
             .StartProcedure<VersionCheckProcedure>();
         
         // 测试网络
-        var endPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, 40001);
-        KcpChannel channel = new KcpChannel(5001, endPoint);
+        var endPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, EndPort);
+        KcpChannel channel = new KcpChannel(Port, endPoint);
         GameEntry.GetModule<NetworkManager>().AddChannel(1, channel);
     }
-
-    /// <summary>
-    /// 初始化UI
-    /// </summary>
-    private void InitializeUI()
-    {
-        UIManager uiManager = GameEntry.GetModule<UIManager>();
-        uiManager.Initialize(new UIGroupHelper(),new UIFormHelper(uiManager,GameEntry.GetModule<ResourceManager>()));
-        //初始化UI组
-        Type uiGroupIdEnumType = typeof(UIGroupID);
-        for (int i = 1; i <= Enum.GetValues(uiGroupIdEnumType).Length; i++)
-        {
-            uiManager.AddUIGroup(Enum.GetName(uiGroupIdEnumType, i), i);
-        }
-    }
+    
 
     
     void Update()

@@ -1,3 +1,4 @@
+using AOT.Framework.Debug;
 using Cysharp.Threading.Tasks;
 using YooAsset;
 
@@ -26,7 +27,9 @@ namespace AOT.Framework.Resource
 
         public void Destroy()
         {
-            YooAssets.Destroy();
+            // 先销毁资源包
+            var package = YooAssets.GetPackage("DefaultPackage");
+            package.DestroyAsync();
         }
 
         public void Init()
@@ -45,47 +48,71 @@ namespace AOT.Framework.Resource
             if (m_mode == ResourceRunningMode.STANDALONE)
             {
                 //单机模式运行
+                var buildinFileSystem = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();
                 var initParameters = new OfflinePlayModeParameters();
-                await DefaultPackage.InitializeAsync(initParameters);
+                initParameters.BuildinFileSystemParameters = buildinFileSystem;
+                var initOperation = DefaultPackage.InitializeAsync(initParameters);
+
+                if (initOperation.Status == EOperationStatus.Succeed)
+                {
+                    IsInitialize = true;
+                    EDebug.Log("STANDALONE ResourceManager Initialize Success.");
+                }
+                else
+                {
+                    IsInitialize = false;
+                    EDebug.Log("STANDALONE ResourceManager Initialize Fail.");
+                }
             }
             else if (m_mode == ResourceRunningMode.ONLINE)
             {
+                EDebug.Log("ONLINE ResourceManager Initialize.");
                 await InitializeYooAsset(DefaultPackage);
             }
 #if UNITY_EDITOR
             else if(m_mode == ResourceRunningMode.EDITOR)
             {
                 //编辑器模式运行
-                var initParameters = new EditorSimulateModeParameters();
-                var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
-                initParameters.SimulateManifestFilePath  = simulateManifestFilePath;
-                await DefaultPackage.InitializeAsync(initParameters);
+                //注意：如果是原生文件系统选择EDefaultBuildPipeline.RawFileBuildPipeline
+                var buildPipeline = EDefaultBuildPipeline.BuiltinBuildPipeline; 
+                var simulateBuildResult = EditorSimulateModeHelper.SimulateBuild(buildPipeline, "DefaultPackage");
+                var editorFileSystem = FileSystemParameters.CreateDefaultEditorFileSystemParameters(simulateBuildResult);
+                EditorSimulateModeParameters initParameters = new EditorSimulateModeParameters();
+                initParameters.EditorFileSystemParameters = editorFileSystem;
+                var initOperation = DefaultPackage.InitializeAsync(initParameters);
+                await initOperation;
+                if (initOperation.Status == EOperationStatus.Succeed)
+                {
+                    EDebug.Log("EDITOR ResourceManager Initialize Success.");
+                    IsInitialize = true;
+                }
+                else
+                {
+                    EDebug.Log("EDITOR ResourceManager Initialize Fail.");
+                    IsInitialize = false;
+                }
             }
 #endif
-            IsInitialize = true;
+
+            
         }
-
-
+        
         private UniTask InitializeYooAsset(ResourcePackage package)
         {
-            // 注意：GameQueryServices.cs 太空战机的脚本类，详细见StreamingAssetsHelper.cs
             // string defaultHostServer = "http://127.0.0.1/CDN/Android/v1.0";
             // string fallbackHostServer = "http://127.0.0.1/CDN/Android/v1.0";
+            // IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
+            // var cacheFileSystem = FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices);
+            // var buildinFileSystem = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();   
             // var initParameters = new HostPlayModeParameters();
-            // initParameters.BuildinQueryServices = new GameQueryServices(); 
-            // initParameters.DecryptionServices = new FileOffsetDecryption();
-            // initParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
+            // initParameters.BuildinFileSystemParameters = buildinFileSystem; 
+            // initParameters.CacheFileSystemParameters = cacheFileSystem;
             // var initOperation = package.InitializeAsync(initParameters);
-            // return initOperation;
-            //
-            // if(initOperation.Status == EOperationStatus.Succeed)
-            // {
-            //     Debug.Log("资源包初始化成功！");
-            // }
-            // else 
-            // {
-            //     Debug.LogError($"资源包初始化失败：{initOperation.Error}");
-            // }
+            // await initOperation;
+            // if (initOperation.Status == EOperationStatus.Succeed)
+            //     IsInitialize = true;
+            // else
+            //     IsInitialize = false;
             return UniTask.CompletedTask;
         }
 

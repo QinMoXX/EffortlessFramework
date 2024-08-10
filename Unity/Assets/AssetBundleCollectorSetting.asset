@@ -76,3 +76,29 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+    - GroupName: Font
+      GroupDesc: "\u5B57\u4F53"
+      AssetTags: Font
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Res/Font
+        CollectorGUID: 073981e1a7dc1b64f84c192aa060622c
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: Prefab
+      GroupDesc: 
+      AssetTags: Prefab
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Res/Prefab
+        CollectorGUID: 7aad1ce7a04490b48812a1188a4ff27c
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
