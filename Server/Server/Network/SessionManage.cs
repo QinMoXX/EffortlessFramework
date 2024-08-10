@@ -22,6 +22,11 @@ namespace AOT.Framework.Network
             sessions.TryAdd(id, session);
         }
 
+        public void RemoveSession(int id)
+        {
+            sessions.TryRemove(id, out var _);
+        }
+
         public NetSession GetSession(int id)
         {
             if (sessions.TryGetValue(id, out var session))

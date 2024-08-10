@@ -11,6 +11,7 @@ namespace AOT.Framework.Network
     public class NetSession:IDisposable,INetSession,IKcpCallback
     {
         const int conv = 2001;
+        const int HEARTBEAT_INTERVAL = 1000 * 10; //单位毫秒
         private int m_sessionId;
         private IPEndPoint m_endPoint;
         private NetworkService m_service;
@@ -19,6 +20,8 @@ namespace AOT.Framework.Network
         public SimpleSegManager.Kcp kcp { get; }
         private UdpClient m_client;
 
+        private long m_lastLiftTime; //单位毫秒
+        
         public int SessionId
         {
             get => m_sessionId;
@@ -46,6 +49,8 @@ namespace AOT.Framework.Network
             this.m_client = client;
             
             this.kcp = new SimpleSegManager.Kcp(conv, this);
+            this.kcp.TraceListener = new ConsoleTraceListener();
+            m_lastLiftTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
         
 
@@ -65,21 +70,33 @@ namespace AOT.Framework.Network
             kcp.Send(datagram.AsSpan().Slice(0, datagram.Length));
         }
 
+        public void Input(byte[] buffer)
+        {
+            kcp.Input(buffer);
+            HeartbeatCheck();
+        }
+        
         public void HeartbeatCheck()
         {
-            
+            Interlocked.Exchange(ref m_lastLiftTime, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
         }
         
         public void Update(in DateTimeOffset time)
         {
             kcp.Update(time);
+            if (time.ToUnixTimeMilliseconds() - Interlocked.Read(ref m_lastLiftTime) > HEARTBEAT_INTERVAL)
+            {
+                m_isConnected = false;
+            }
         }
 
         public void Dispose()
         {
+            m_client = null;
             m_endPoint = null;
             m_service = null;
             m_isConnected = false;
+            kcp?.Dispose();
         }
 
         public void Output(IMemoryOwner<byte> buffer, int avalidLength)

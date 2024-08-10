@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net.Sockets.Kcp;
 using AOT.Framework.Network;
+using Cysharp.Threading.Tasks;
 using HotUpdate.Network.Message;
 
 public class NetworkService: IService,IKcpCallback
@@ -29,6 +30,10 @@ public class NetworkService: IService,IKcpCallback
                 for (int i = 0; i < sessions.Length; i++)
                 {
                     sessions[i].Update(DateTimeOffset.UtcNow);
+                    if (sessions[i].IsConnected == false)
+                    {
+                        SessionManage.Instance.RemoveSession(sessions[i].SessionId);
+                    }
                 }
                 await Task.Delay(10);
             }
@@ -63,11 +68,11 @@ public class NetworkService: IService,IKcpCallback
 
     private async ValueTask<byte[]> ReceiveAsync(NetSession session)
     {
-        var (buffer, avalidLength) = kcp.TryRecv();
+        var (buffer, avalidLength) = session.kcp.TryRecv();
         while (buffer == null)
         {
             await Task.Delay(10);
-            (buffer, avalidLength) = kcp.TryRecv();
+            (buffer, avalidLength) = session.kcp.TryRecv();
         }
 
         var s = buffer.Memory.Span.Slice(0, avalidLength).ToArray();
@@ -86,8 +91,9 @@ public class NetworkService: IService,IKcpCallback
                 session = new NetSession(sessionId, res.RemoteEndPoint, this, m_client);
                 SessionManage.Instance.AddSession(session.SessionId, session);
             }
-            kcp.Input(res.Buffer);
-            
+            Console.WriteLine(($"Receive form session : {session.SessionId}, RemoteEndPoint:{session.EndPoint}"));
+            session.kcp.Input(res.Buffer);
+
             ProcessMessage(session);
         }
     }
