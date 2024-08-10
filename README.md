@@ -22,10 +22,20 @@
 - [ ] 日志
 - [ ] 网络
 
+# 代码检查器
+代码检查器负责编译和启动阶段的代码检查，包括代码格式、命名规范、代码规范、代码质量、代码效率等。
+
+- 模块依赖检查：检测模块之间的依赖关系，确保模块之间没有循环依赖，并且确保模块加载时的顺序正确。
+- 网络消息检查：检查消息定义合法性。包括消息ID重复检查
+
+# 网络
+本框架包含双端的网络框架，支持KCP协议，消息使用 MemoryPack 进行序列化。提供 .Net 平台上最快的struct序列化能力。
+
 
 # 参考
 本框架的开发离不开众多前辈的智慧结晶，包括 GameFramework、ET 和 QFramework 等，以及 Hybridclr、Luban、YooAsset 和 UniTask 等优秀工具和解决方案的支持。
 我们将持续学习和借鉴，不断提升框架的完善度和实用性。
+
 [GitHub - EllanJiang/GameFramework](https://github.com/EllanJiang/GameFramework)
 [GitHub - egametang/ET](https://github.com/egametang/ET)
 [GitHub - liangxiegame/QFramework](https://github.com/liangxiegame/QFramework)
