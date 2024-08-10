@@ -118,9 +118,14 @@ public class KcpChannel : IKcpCallback,INetworkChannel
             var res = await client.ReceiveAsync();
             EndPoint = res.RemoteEndPoint;
             Kcp.Input(res.Buffer);
-            byte[] bytes = await ReceiveAsync();
-            m_messageQueue.Enqueue(DetachPacket(bytes));
+            ProcessMessage().Forget();
         }
+    }
+    
+    private async UniTaskVoid ProcessMessage()
+    {
+        byte[] bin = await ReceiveAsync();
+        m_messageQueue.Enqueue(DetachPacket(bin));
     }
     
     public void Output(IMemoryOwner<byte> buffer, int avalidLength)
