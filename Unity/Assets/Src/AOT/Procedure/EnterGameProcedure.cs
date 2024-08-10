@@ -36,7 +36,7 @@ namespace Src
              //进入热更新脚本逻辑，Yooasset下载核对完成后加载后面package
 #if !UNITY_EDITOR
              // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
-             var package = GameEntry.GetModule<ResourceManager>().defaultPackage;
+             var package = (GameEntry.GetModule<ResourceManager>() as ResourceManager).DefaultPackage;
              //加载原生打包的dll文件
              var handlefiles = package.LoadAssetSync<TextAsset>(HotDllName + ".dll");
              await handlefiles;

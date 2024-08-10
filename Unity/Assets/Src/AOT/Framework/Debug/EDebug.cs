@@ -1,12 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AOT.Framework.Debug
 {
         
-    public static partial class EDebug
+    public sealed class EDebug
     {
         public static ILogHelper LogHelper;
         public static LogType LogFilter;
+
+        public static Dictionary<int, EDebug> m_DebugDict = new Dictionary<int, EDebug>();
+        public static EDebug GetSource()
+        {
+            return new EDebug();
+        }
 
         /// <summary>
         /// 信息
