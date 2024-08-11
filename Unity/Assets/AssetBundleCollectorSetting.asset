@@ -90,12 +90,25 @@ MonoBehaviour:
         AssetTags: 
         UserData: 
     - GroupName: Prefab
-      GroupDesc: 
+      GroupDesc: "\u9884\u5236\u4F53"
       AssetTags: Prefab
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/Res/Prefab
         CollectorGUID: 7aad1ce7a04490b48812a1188a4ff27c
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: Scene
+      GroupDesc: "\u6E38\u620F\u573A\u666F"
+      AssetTags: Scene
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Res/Scene
+        CollectorGUID: 12b654b63b06e3941b3c9ee18609b599
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
