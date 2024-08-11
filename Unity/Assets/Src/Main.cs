@@ -30,6 +30,7 @@ public class Main : MonoBehaviour
     
     private void Awake()
     {
+        GameObject.DontDestroyOnLoad(this);
         EDebug.LogFilter = LogFilter;
         GameEntry.CreatModule<FsmManager>();
         GameEntry.CreatModule<ProcedureManager>();
