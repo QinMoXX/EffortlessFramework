@@ -83,7 +83,7 @@ namespace AOT.Framework.Audio
                 m_audioSource.Stop();
             }
 
-            if (cts != null)
+            if (cts != null && !cts.IsCancellationRequested)
             {
                 cts.Cancel();
                 cts.Dispose();
@@ -114,8 +114,13 @@ namespace AOT.Framework.Audio
         public void Play(float fadeInSeconds = 0)
         {
             // 取消之前的播放控制任务，以确保不会同时进行多个播放操作
-            cts.Cancel();
-            cts.Dispose();
+            if (cts != null)
+            {
+                cts.Cancel();
+                cts.Dispose();
+                cts = null;
+            }
+
             // 开始播放音频
             m_audioSource.Play();
             if (fadeInSeconds > 0)
