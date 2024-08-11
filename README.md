@@ -28,6 +28,30 @@
 - 模块依赖检查：检测模块之间的依赖关系，确保模块之间没有循环依赖，并且确保模块加载时的顺序正确。
 - 网络消息检查：检查消息定义合法性。包括消息ID重复检查
 
+# UI
+```csharp
+// 打开界面
+await UIUtility.ShowAndTryCreateUIForm<LoginUI>(UIID.LoginUI);
+
+// 关闭界面
+UIUtility.CloseUIForm(UIID.LoginUI);
+```
+
+# 音频
+```csharp
+// 播放音频
+GameEntry.GetModule<AudioManager>().PlayAudio("Bullet Impact 21","UI");
+// 获取音频Guid
+IAudioHandle audioObject = GameEntry.GetModule<AudioManager>().PlayAudio("Railgun - Shot 6","Sound");
+Guid audioId = audioObject.Guid;
+
+// 停止音频
+GameEntry.GetModule<AudioManager>().StopAudio(audioId,3); // 3秒淡出时间
+
+// 空间音频
+(audioObject.Target as GameObject).transform.position = Vector3.zero;
+```
+
 # 网络
 本框架包含双端的网络框架，支持KCP协议，消息使用 MemoryPack 进行序列化。提供 .Net 平台上最快的struct序列化能力。
 
