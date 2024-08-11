@@ -15,5 +15,12 @@ namespace HotUpdate.Utility
             await GameEntry.GetModule<Framework.UI.UIManager>().ShowAndTryCreateUIForm<TUIForm>((int)uiFormId, param);
                 
         }
+        
+        public static void CloseUIForm(UIID uiFormId)
+        {
+            
+            GameEntry.GetModule<Framework.UI.UIManager>().CloseUIForm((int)uiFormId);
+                
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace AOT.Framework.Mvc
         /// </summary>
         /// <typeparam name="T">视图类型</typeparam>
         /// <returns>视图类</returns>
-        public IView GetView<T>() where T : class, IView,new()
+        public T GetView<T>() where T : class, IView,new()
         {
             Type viewType = typeof(T);
             IView view;
@@ -49,7 +49,7 @@ namespace AOT.Framework.Mvc
                 view.Init();
                 m_ViewDic.Add(viewType,view);
             }
-            return view;
+            return view as T;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace AOT.Framework.Mvc
         /// </summary>
         /// <typeparam name="T">数据模型类型</typeparam>
         /// <returns>数据模型类</returns>
-        public IModel GetModel<T>() where T : class, IModel, new()
+        public T GetModel<T>() where T : class, IModel, new()
         {
             Type modelType = typeof(T);
             IModel model;
@@ -85,7 +85,7 @@ namespace AOT.Framework.Mvc
                 m_ModelDic.Add(modelType, model);
             }
 
-            return model;
+            return model as T;
         }
         
         /// <summary>
@@ -110,7 +110,7 @@ namespace AOT.Framework.Mvc
         /// </summary>
         /// <typeparam name="T">控制器类型</typeparam>
         /// <returns>控制器类</returns>
-        public IController GetController<T>() where T : class, IController, new()
+        public T GetController<T>() where T : class, IController, new()
         {
             Type controllerType = typeof(T);
             IController controller;
@@ -120,7 +120,7 @@ namespace AOT.Framework.Mvc
                 controller.Init();
                 m_ControllerDic.Add(controllerType, controller);
             }
-            return controller;
+            return controller as T;
         }
         
         /// <summary>
