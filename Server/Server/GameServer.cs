@@ -1,5 +1,7 @@
 using HotUpdate.Network;
 using HotUpdate.Network.Message;
+using MongoDB.Driver;
+using Server.DBModel;
 using Server.Service;
 
 public class GameServer:IDisposable
@@ -20,8 +22,6 @@ public class GameServer:IDisposable
     {
         m_networkService.Start();
         m_dbService.Start();
-        
-        
         
         NetworkDispatcher.Instance.SubscribeMessage<ReqLogin>((int)NetworkMessageIds.ReqLogin, NetworkDispatcher.OnReqLogin);
         Console.WriteLine("GameServer Started");

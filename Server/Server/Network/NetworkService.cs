@@ -65,19 +65,7 @@ public class NetworkService: IService,IKcpCallback
         m_client.SendAsync(s, s.Length, null);
         buffer.Dispose();
     }
-
-    private async ValueTask<byte[]> ReceiveAsync(NetSession session)
-    {
-        var (buffer, avalidLength) = session.kcp.TryRecv();
-        while (buffer == null)
-        {
-            await Task.Delay(10);
-            (buffer, avalidLength) = session.kcp.TryRecv();
-        }
-
-        var s = buffer.Memory.Span.Slice(0, avalidLength).ToArray();
-        return s;
-    }
+    
 
     private async Task BeginRecv()
     {
@@ -100,7 +88,7 @@ public class NetworkService: IService,IKcpCallback
     
     private async Task ProcessMessage(NetSession session)
     {
-        byte[] bin = await ReceiveAsync(session);
+        byte[] bin = await session.ReceiveAsync();
         var (id, data) = DetachPacket(bin);
         
         if (id < 0)

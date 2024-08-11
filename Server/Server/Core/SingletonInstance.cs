@@ -24,5 +24,11 @@ namespace AOT.Framework
 		{
 			_instance = null;
 		}
+
+		public SingletonInstance()
+		{
+			if (_instance == null)
+				_instance = this as T;
+		}
 	}
 }

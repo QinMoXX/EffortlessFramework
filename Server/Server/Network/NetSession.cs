@@ -74,6 +74,26 @@ namespace AOT.Framework.Network
         {
             kcp.Send(datagram.AsSpan().Slice(0, datagram.Length));
         }
+        
+        public async ValueTask<byte[]> ReceiveAsync()
+        {
+            var (buffer, avalidLength) = kcp.TryRecv();
+            // 等待计数器
+            int count = 0;
+            while (buffer == null)
+            {
+                await Task.Delay(10);
+                (buffer, avalidLength) = kcp.TryRecv();
+                count += 1;
+                if (count > 10)
+                {
+                    return Array.Empty<byte>();
+                }
+            }
+
+            var s = buffer.Memory.Span.Slice(0, avalidLength).ToArray();
+            return s;
+        }
 
         public void Input(byte[] buffer)
         {
@@ -91,7 +111,7 @@ namespace AOT.Framework.Network
             kcp.Update(time);
             if (time.ToUnixTimeMilliseconds() - Interlocked.Read(ref m_lastLiftTime) > HEARTBEAT_INTERVAL)
             {
-                m_isConnected = false;
+                // m_isConnected = false;
             }
         }
 
