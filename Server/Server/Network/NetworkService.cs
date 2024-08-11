@@ -92,7 +92,7 @@ public class NetworkService: IService,IKcpCallback
                 SessionManage.Instance.AddSession(session.SessionId, session);
             }
             Console.WriteLine(($"Receive form session : {session.SessionId}, RemoteEndPoint:{session.EndPoint}"));
-            session.kcp.Input(res.Buffer);
+            session.Input(res.Buffer);
 
             ProcessMessage(session);
         }
@@ -102,11 +102,28 @@ public class NetworkService: IService,IKcpCallback
     {
         byte[] bin = await ReceiveAsync(session);
         var (id, data) = DetachPacket(bin);
-        if (m_networkDispatcher == null)
+        
+        if (id < 0)
         {
-            throw  new Exception("Network Service is not initialized!");
+            // id < 0 的为帧同步数据，不做处理，直接转发
+            NetSession[] sessions = SessionManage.Instance.GetAllSessions();
+            for (int i = 0; i < sessions.Length; i++)
+            {
+                if (session.SessionId == sessions[i].SessionId)
+                {
+                    continue;
+                }
+                sessions[i].SendAsync(bin);
+            }
         }
-        m_networkDispatcher.Dispatch(session as INetSession, id , data);
+        else
+        {
+            if (m_networkDispatcher == null)
+            {
+                throw  new Exception("Network Service is not initialized!");
+            }
+            m_networkDispatcher.Dispatch(session as INetSession, id , data);
+        }
     }
     
     

@@ -70,6 +70,11 @@ namespace AOT.Framework.Network
             kcp.Send(datagram.AsSpan().Slice(0, datagram.Length));
         }
 
+        public async UniTask SendAsync(byte[] datagram)
+        {
+            kcp.Send(datagram.AsSpan().Slice(0, datagram.Length));
+        }
+
         public void Input(byte[] buffer)
         {
             kcp.Input(buffer);

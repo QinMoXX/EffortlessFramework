@@ -5,6 +5,7 @@ using AOT.Framework.Network;
 using AOT.Framework.Procedure;
 using AOT.Framework.Resource;
 using AOT.UI;
+using Cysharp.Threading.Tasks;
 using Framework.UI;
 using HotUpdate;
 using HotUpdate.Network;
@@ -29,10 +30,8 @@ public class HotUpdateMain:IEntry
         channel.Initialize(networkDispatcher);
         
         networkDispatcher.SubscribeMessage<ResLogin>((int)NetworkMessageIds.ResLogin, NetworkDispatcher.OnResLogin);
-
-        ReqLogin reqLogin = new ReqLogin() { name = "test", password = "123456" };
-        channel.SendAsync(1000, MemoryPackSerializer.Serialize(reqLogin));
     }
+    
     
     private void InitializeUI()
     {

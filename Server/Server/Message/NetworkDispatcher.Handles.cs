@@ -9,7 +9,7 @@ namespace HotUpdate.Network
         {
             Console.WriteLine($"OnReqLogin: {resLogin.name} {resLogin.password}");
             session.SendMessage<ResLogin>((int)NetworkMessageIds.ResLogin,
-                new ResLogin {  result = true });
+                new ResLogin {  result = true, token = session.SessionId.ToString()});
         }
     }
 }

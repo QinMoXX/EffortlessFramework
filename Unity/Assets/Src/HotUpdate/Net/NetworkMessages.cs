@@ -14,6 +14,6 @@ namespace HotUpdate.Network.Message
     public partial class ResLogin: NetPacket
     {
         public bool result { get; set; }
-        
+        public string token { get; set; }
     }
 }

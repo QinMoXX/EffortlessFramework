@@ -1,8 +1,11 @@
 using System;
 using AOT.Framework;
 using AOT.Framework.Audio;
+using AOT.Framework.Mvc;
 using AOT.UI;
 using AOT.UI.AOT.UI;
+using HotUpdate.Controller;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +18,11 @@ namespace HotUpdate.UI
         public override string UIGroup => "Panel";
         
         private Button btn_start;
-        private  Button btn_setting;
+        private Button btn_setting;
         private Button btn_exit;
+
+        private TMP_InputField  ip_username;
+        private TMP_InputField ip_password;
         public override void OnInit()
         {
             btn_start = this.GetControl<Button>("btn_start");
@@ -24,30 +30,22 @@ namespace HotUpdate.UI
             btn_exit = this.GetControl<Button>("btn_exit");
             btn_start.onClick.AddListener(OnClickStart);
             btn_setting.onClick.AddListener(OnClickSetting);
+            ip_username = this.GetControl<TMP_InputField>("ip_username");
+            ip_password = this.GetControl<TMP_InputField>("ip_password");
         }
 
         private void OnClickSetting()
         {
-            GameEntry.GetModule<AudioManager>().PlayAudio("Bullet Impact 21","UI");
-            GameEntry.GetModule<AudioManager>().PlayAudio("Railgun - Shot 6","Sound");
+            GameEntry.GetModule<AudioManager>().PlayAudio("DM-CGS-01","UI");
+            
         }
 
         private Guid audioId;
         private bool isPlaying;
         private void OnClickStart()
         {
-            if (isPlaying)
-            {
-                GameEntry.GetModule<AudioManager>().StopAudio(audioId,3);
-            }
-            else
-            {
-                IAudioHandle audioObject = GameEntry.GetModule<AudioManager>().PlayAudio("Thunder strikes 30 second- Loop", "Background", 3);
-                audioId = audioObject.Guid;
-                (audioObject.Target as GameObject).transform.SetParent((this.Handel as GameObject).transform);
-            }
-
-            isPlaying = !isPlaying;
+            GameEntry.GetModule<AudioManager>().PlayAudio("DM-CGS-01","UI");
+            this.GetController<LoginController>().Login(ip_username.text, ip_password.text);
         }
 
 
