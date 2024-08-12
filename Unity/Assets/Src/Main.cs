@@ -3,6 +3,7 @@ using AOT.Framework;
 using AOT.Framework.Audio;
 using Src;
 using AOT.Framework.Debug;
+using AOT.Framework.Event;
 using AOT.Framework.Fsm;
 using AOT.Framework.Mvc;
 using AOT.Framework.Network;
@@ -33,6 +34,7 @@ public class Main : MonoBehaviour
     {
         GameObject.DontDestroyOnLoad(this);
         EDebug.LogFilter = LogFilter;
+        GameEntry.CreatModule<EventManager>();
         GameEntry.CreatModule<FsmManager>();
         GameEntry.CreatModule<ProcedureManager>();
         GameEntry.CreatModule<ResourceManager>().SetMode(ResourceMode);
