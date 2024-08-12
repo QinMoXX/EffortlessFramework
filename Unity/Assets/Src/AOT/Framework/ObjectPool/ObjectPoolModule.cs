@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
 namespace AOT.Framework.ObjectPool
@@ -32,11 +33,14 @@ namespace AOT.Framework.ObjectPool
 
         public void Update(float virtualElapse, float realElapse)
         {
+            Profiler.BeginSample("ObjectPoolManager.Update");
+            
             //按照优先级遍历
             foreach (var tuple in m_PriorityObjectPools.List)
             {
                 tuple.Item2.Update(virtualElapse, realElapse);
             }
+            Profiler.EndSample();
         }
 
         public void Destroy()

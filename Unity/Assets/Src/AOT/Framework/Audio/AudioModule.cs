@@ -5,6 +5,7 @@ using AOT.Framework.ObjectPool;
 using AOT.Framework.Resource;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Profiling;
 
 namespace AOT.Framework.Audio
 {
@@ -41,6 +42,7 @@ namespace AOT.Framework.Audio
 
         public void Update(float virtualElapse, float realElapse)
         {
+            Profiler.BeginSample("AudioManager.Update");
             Guid[] guids = m_AudioObjectIdMap.Keys.ToArray();
             for (int i = 0; i < guids.Length; i++)
             {
@@ -57,6 +59,7 @@ namespace AOT.Framework.Audio
                 planeAudioObjectPool.Despawn(audioObject.Target);
                 m_AudioObjectIdMap.Remove(guids[i]);
             }
+            Profiler.EndSample();
         }
 
         public void Destroy()

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Framework;
+using UnityEngine.Profiling;
 
 namespace AOT.Framework.Mvc
 {
@@ -24,7 +24,8 @@ namespace AOT.Framework.Mvc
 
         public void Update(float virtualElapse, float realElapse)
         {
-            
+            Profiler.BeginSample("MvcManager.Update");
+            Profiler.EndSample();
         }
 
         public void Destroy()

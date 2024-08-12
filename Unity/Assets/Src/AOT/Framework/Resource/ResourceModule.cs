@@ -1,5 +1,6 @@
 using AOT.Framework.Debug;
 using Cysharp.Threading.Tasks;
+using UnityEngine.Profiling;
 using UnityEngine.SceneManagement;
 using YooAsset;
 
@@ -24,7 +25,8 @@ namespace AOT.Framework.Resource
         
         public void Update(float virtualElapse, float realElapse)
         {
-            
+            Profiler.BeginSample("ResourceManager.Update");
+            Profiler.EndSample();
         }
 
         public void Destroy()

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using AOT.Framework;
@@ -6,6 +5,7 @@ using AOT.Framework.Debug;
 using AOT.Framework.Mvc;
 using AOT.Framework.UI;
 using Cysharp.Threading.Tasks;
+using UnityEngine.Profiling;
 
 namespace Framework.UI
 {
@@ -76,7 +76,8 @@ namespace Framework.UI
 
         public void Update(float virtualElapse, float realElapse)
         {
-            
+            Profiler.BeginSample("UIManager.Update");
+            Profiler.EndSample();
         }
         
         /// <summary>

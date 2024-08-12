@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.Profiling;
 
 namespace AOT.Framework.Fsm
 {
@@ -29,7 +30,7 @@ namespace AOT.Framework.Fsm
 
         public void Update(float elapseSeconds, float realElapseSeconds)
         {
-            
+            Profiler.BeginSample("FsmManager.Update");
             foreach (var fsm in m_FsmsCache)
             {
                 if (!fsm.IsRunning)
@@ -38,6 +39,7 @@ namespace AOT.Framework.Fsm
                 }
                 (fsm as IFsm).Update(elapseSeconds,realElapseSeconds);
             }
+            Profiler.EndSample();
         }
 
         public void Destroy()

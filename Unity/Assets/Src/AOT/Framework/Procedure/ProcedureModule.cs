@@ -1,5 +1,6 @@
 ﻿using System;
 using AOT.Framework.Fsm;
+using UnityEngine.Profiling;
 
 
 namespace AOT.Framework.Procedure
@@ -26,7 +27,8 @@ namespace AOT.Framework.Procedure
         
         public void Update(float virtualElapse, float realElapse)
         {
-            
+            Profiler.BeginSample("ProcedureManager.Update");
+            Profiler.EndSample();
         }
 
         /// <summary>

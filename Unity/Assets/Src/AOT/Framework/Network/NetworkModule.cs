@@ -1,14 +1,7 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using AOT.Framework.Debug;
-using Cysharp.Threading.Tasks;
-using System.Net.Sockets.Kcp;
-using MemoryPack;
-using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace AOT.Framework.Network
 {
@@ -32,7 +25,7 @@ namespace AOT.Framework.Network
         
         public void Update(float virtualElapse, float realElapse)
         {
-
+            Profiler.BeginSample("NetworkManager.Update");
             if (m_channels == null)
             {
                 return;
@@ -42,7 +35,7 @@ namespace AOT.Framework.Network
             {
                 m_channels[i].Update(virtualElapse, realElapse);
             }
-            
+            Profiler.EndSample();
         }
 
         public void Destroy()
