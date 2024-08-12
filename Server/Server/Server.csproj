@@ -31,13 +31,13 @@
       <Compile Include="..\..\Unity\Assets\Src\AOT\Framework\Network\INetworkDispatcher.cs">
         <Link>Network\INetworkDispatcher.cs</Link>
       </Compile>
-      <Compile Include="..\..\Unity\Assets\Src\HotUpdate\Net\NetPacket.cs">
+      <Compile Include="..\..\Unity\Assets\Src\HotUpdate\Network\NetPacket.cs">
         <Link>Message\NetPacket.cs</Link>
       </Compile>
-      <Compile Include="..\..\Unity\Assets\Src\HotUpdate\Net\NetworkMessageIds.cs">
+      <Compile Include="..\..\Unity\Assets\Src\HotUpdate\Network\NetworkMessageIds.cs">
         <Link>Message\NetworkMessageIds.cs</Link>
       </Compile>
-      <Compile Include="..\..\Unity\Assets\Src\HotUpdate\Net\NetworkMessages.cs">
+      <Compile Include="..\..\Unity\Assets\Src\HotUpdate\Network\NetworkMessages.cs">
         <Link>Message\NetworkMessages.cs</Link>
       </Compile>
     </ItemGroup>

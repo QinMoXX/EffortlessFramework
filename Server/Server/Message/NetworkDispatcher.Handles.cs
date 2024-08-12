@@ -16,7 +16,7 @@ namespace HotUpdate.Network
                 var filter = Builders<User>.Filter
                     .Eq(user => user.UserName, reqLogin.name);
                 User result = DBService.Instance.FindData<User>("User", filter);
-                if (result.Password == reqLogin.password)
+                if (result != null && result.Password == reqLogin.password)
                 {
                     session.SendMessage<ResLogin>((int)NetworkMessageIds.ResLogin, new ResLogin
                     {
