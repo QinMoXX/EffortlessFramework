@@ -2,7 +2,7 @@ using AOT.Framework;
 using AOT.Framework.Debug;
 using AOT.Framework.Mvc;
 using AOT.Framework.Network;
-using AOT.Framework.Scene;
+using HotUpdate.Event;
 using HotUpdate.Model;
 using HotUpdate.Network.Message;
 using HotUpdate.UI.View;
@@ -35,6 +35,7 @@ namespace HotUpdate.Controller
                 UIUtility.CloseUIForm(UIID.LoginUI);
                 this.GetModel<LoginModel>().token = resLogin.token;
                 EDebug.Log($"登录成功！{this.GetModel<LoginModel>().userName} token : {this.GetModel<LoginModel>().token}");
+                this.SendNow<EnterHomeEvent, WorldEventGroup>(this,new EnterHomeEvent());
             }
             else
             {

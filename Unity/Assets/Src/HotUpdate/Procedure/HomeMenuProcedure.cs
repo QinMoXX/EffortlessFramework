@@ -7,14 +7,16 @@ using AOT.Framework.Procedure;
 using AOT.Framework.Resource;
 using AOT.Framework.Scene;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using HotUpdate.Event;
 using HotUpdate.UI;
 using HotUpdate.UI.View;
 using HotUpdate.Utility;
 using UnityEngine;
 
-public class HomeMenuProcedure:ProcedureBase
+public class HomeMenuProcedure:ProcedureBase,IEventReceiver
 {
-    private bool enterMap;
+    private bool EnterHome;
     public HomeMenuProcedure(IFsm handle) : base(handle)
     {
     }
@@ -27,8 +29,15 @@ public class HomeMenuProcedure:ProcedureBase
     protected override void OnEnter()
     {
         EDebug.Log("进入主菜单界面");
-
+        this.Register<EnterHomeEvent, WorldEventGroup>(OnEnterHomeEvent);
         OnUpdateAsync().Forget();
+    }
+
+    private void OnEnterHomeEvent(object sender, EnterHomeEvent e)
+    {
+        EnterHome = true;
+        EnvCamera.MainCamera.transform.DOMoveZ(0, 2f).SetEase(Ease.InBack).SetDelay(0.5f);
+        EDebug.Log("进入主界面");
     }
 
     private async UniTaskVoid OnUpdateAsync()
@@ -52,11 +61,14 @@ public class HomeMenuProcedure:ProcedureBase
 
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
     {
-        
+        if (EnterHome)
+        {
+            
+        }
     }
 
     protected override void OnLeave()
     {
-        
+        this.UnRegister<EnterHomeEvent,WorldEventGroup>(OnEnterHomeEvent);
     }
 }
