@@ -110,7 +110,20 @@ MonoBehaviour:
       - CollectPath: Assets/Res/Scene
         CollectorGUID: 12b654b63b06e3941b3c9ee18609b599
         CollectorType: 0
-        AddressRuleName: AddressByFileName
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: Material
+      GroupDesc: "\u6750\u8D28\u7403"
+      AssetTags: Material
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Res/Material
+        CollectorGUID: 526a64f1ea43e2b4889f7e86aba5c643
+        CollectorType: 0
+        AddressRuleName: AddressByGroupAndFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
