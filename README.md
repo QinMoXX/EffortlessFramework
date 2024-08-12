@@ -16,7 +16,7 @@
 - [x] 音频
 - [x] 对象池
 - [x] 持久化数据
-- [ ] 场景
+- [x] 场景
 - [ ] 地图编辑器
 - [ ] 实体
 - [ ] 日志
@@ -50,6 +50,23 @@ GameEntry.GetModule<AudioManager>().StopAudio(audioId,3); // 3秒淡出时间
 
 // 空间音频
 (audioObject.Target as GameObject).transform.position = Vector3.zero;
+```
+
+# 场景
+```CSharp
+//加载场景
+GameEntry.GetModule<SceneManager>().LoadScene("Home", OnSceneLoadedActin) //同步
+GameEntry.GetModule<SceneManager>().LoadSceneAsync("Home", default, OnSceneLoadedActin, OnSceneLoadingAction,false); //异步
+private void OnSceneLoadingAction(float progress, string sceNename)
+{
+    EDebug.Log($"OnSceneLoadingAction progress: {progress.ToString()}");
+}
+
+private void OnSceneLoadedActin(bool isSuccess, string sceNename)
+{
+    //卸载场景
+    GameEntry.GetModule<SceneManager>().UnloadScene("Main");
+}
 ```
 
 # 网络
