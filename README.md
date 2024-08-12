@@ -20,13 +20,33 @@
 - [ ] 地图编辑器
 - [ ] 实体
 - [ ] 日志
-- [ ] 网络
+- [x] 网络
+
+## 服务端
+- [x] 网络
+- [x] 数据库
+- [ ] 服务端热更新
+- [ ] 分布式
 
 # 代码检查器
 代码检查器负责编译和启动阶段的代码检查，包括代码格式、命名规范、代码规范、代码质量、代码效率等。
 
 - 模块依赖检查：检测模块之间的依赖关系，确保模块之间没有循环依赖，并且确保模块加载时的顺序正确。
 - 网络消息检查：检查消息定义合法性。包括消息ID重复检查
+
+# 事件
+```csharp
+//通过事件管理器调用
+EventManager.Instance.Register<TEventArgs,TGroup>(onEvent); //注册事件
+EventManager.Instance.UnRegister<TEventArgs,TGroup>(onEvent); //注销事件
+EventManager.Instance.SendNow<TEventArgs,TGroup>(sender,e); //立即发送事件
+EventManager.Instance.Send<TEventArgs,TGroup>(sender,e); //发送事件（线程安全）
+
+//通过接口扩展调用
+this.Register<TEventArgs, TGroup>(onEvent); //注册事件继承 IEventReceiver
+this.UnRegister<TEventArgs,TGroup>(onEvent); //注销事件继承 IEventReceiver
+this.SendNow<TEventArgs, TGroup>(sender,EventArgs); //立即发送事件继承 IEventSender
+```
 
 # UI
 ```csharp
