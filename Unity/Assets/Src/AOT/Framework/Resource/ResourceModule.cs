@@ -1,5 +1,6 @@
 using AOT.Framework.Debug;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 using YooAsset;
 
 
@@ -157,6 +158,21 @@ namespace AOT.Framework.Resource
 
             var handle = DefaultPackage.LoadAssetSync<T>(assetName);
             return handle.AssetObject as T;
+        }
+
+        /// <summary>
+        /// 检查资源是否存在
+        /// </summary>
+        /// <param name="assetName">资源名称或路径</param>
+        /// <returns></returns>
+        public bool Exist(string assetName)
+        {
+            if (DefaultPackage == null || !IsInitialize)
+            {
+                throw new GameFrameworkException("package is null or not initialize.");
+            }
+
+            return DefaultPackage.CheckLocationValid(assetName);
         }
     }
 }

@@ -15,5 +15,7 @@ namespace AOT.Framework.Resource
         UniTask<T> LoadAssetAsync<T>(string assetName) where T : UnityEngine.Object;
         
         T LoadAssetSync<T>(string assetName) where T : UnityEngine.Object;
+
+        bool Exist(string assetName);
     }
 }

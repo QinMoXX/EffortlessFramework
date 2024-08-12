@@ -11,6 +11,7 @@ using AOT.Framework.Procedure;
 using AOT.Framework.Resource;
 using AOT.UI;
 using Framework.UI;
+using AOT.Framework.Scene;
 using UnityEngine;
 using LogType = AOT.Framework.Debug.LogType;
 
@@ -40,6 +41,7 @@ public class Main : MonoBehaviour
         GameEntry.CreatModule<ObjectPoolManager>();
         GameEntry.CreatModule<AudioManager>();
         GameEntry.CreatModule<NetworkManager>().Initialize();
+        GameEntry.CreatModule<SceneManager>();
     }
 
     
