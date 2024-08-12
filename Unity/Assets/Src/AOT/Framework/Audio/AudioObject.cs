@@ -3,7 +3,6 @@ using System.Threading;
 using AOT.Framework.ObjectPool;
 using AOT.Framework.Resource;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using UnityEngine;
 
 namespace AOT.Framework.Audio
