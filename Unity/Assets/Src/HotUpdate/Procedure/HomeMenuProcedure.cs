@@ -11,7 +11,6 @@ using DG.Tweening;
 using HotUpdate.Event;
 using HotUpdate.UI;
 using HotUpdate.UI.View;
-using HotUpdate.Utility;
 using UnityEngine;
 
 public class HomeMenuProcedure:ProcedureBase,IEventReceiver

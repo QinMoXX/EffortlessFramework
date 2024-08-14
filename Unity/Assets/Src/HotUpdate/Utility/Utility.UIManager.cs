@@ -3,8 +3,6 @@ using AOT.Framework.UI;
 using Cysharp.Threading.Tasks;
 using HotUpdate.UI.View;
 
-namespace HotUpdate.Utility
-{
     public static class UIUtility
     {
             
@@ -23,4 +21,3 @@ namespace HotUpdate.Utility
                 
         }
     }
-}
