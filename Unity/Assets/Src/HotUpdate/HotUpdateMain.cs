@@ -30,6 +30,8 @@ public class HotUpdateMain:IEntry
         channel.Initialize(networkDispatcher);
         
         networkDispatcher.SubscribeMessage<ResLogin>((int)NetworkMessageIds.ResLogin, NetworkDispatcher.OnResLogin);
+        networkDispatcher.SubscribeMessage<ResEntryRoom>((int)NetworkMessageIds.ResLogin,
+            NetworkDispatcher.OnResEntryRoom);
     }
     
     
