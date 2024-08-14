@@ -118,11 +118,11 @@ public class KcpChannel : IKcpCallback,INetworkChannel
             var res = await client.ReceiveAsync();
             EndPoint = res.RemoteEndPoint;
             Kcp.Input(res.Buffer);
-            ProcessMessage().Forget();
+            UniTask.RunOnThreadPool(ProcessMessage);
         }
     }
     
-    private async UniTaskVoid ProcessMessage()
+    private async UniTask ProcessMessage()
     {
         byte[] bin = await ReceiveAsync();
         m_messageQueue.Enqueue(DetachPacket(bin));
