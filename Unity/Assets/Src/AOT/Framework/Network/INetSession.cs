@@ -11,7 +11,7 @@ namespace AOT.Framework.Network
         /// 会话Id
         /// </summary>
         public int SessionId { get; }
-        
+
         /// <summary>
         /// 是否连接
         /// </summary>
@@ -31,6 +31,10 @@ namespace AOT.Framework.Network
         /// <returns></returns>
         public UniTask SendMessage<T>(int id, T messagePack);
 
-
+        /// <summary>
+        /// 获取Token
+        /// </summary>
+        /// <returns></returns>
+        public string GetToken();
     }
 }
