@@ -11,6 +11,9 @@ public class User
     public MongoDB.Bson.ObjectId _id { get; set; }
     
     [DataMember]
+    public Int32 UID{ get; set; }
+    
+    [DataMember]
     public string UserName{ get; set; }
     
     [DataMember]

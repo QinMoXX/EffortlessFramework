@@ -1,22 +1,24 @@
 using System.Collections.Concurrent;
 using System.Net;
+using Server.Core;
 
 namespace AOT.Framework.Network
 {
     public class SessionManage:SingletonInstance<SessionManage>
     {
         private ConcurrentDictionary<int, NetSession> sessions = new ConcurrentDictionary<int, NetSession>();
-        
+        private ConcurrentDictionary<int, Avatar> avatars = new ConcurrentDictionary<int, Avatar>();
+
+        #region Session
         public void AddSession(int id,NetSession session)
         {
-            if (sessions.TryGetValue(id, out var _))
-            {
-                return;
-            }
-
             if (session == null)
             {
                 throw  new ArgumentNullException($"Session is invalid");
+            }
+            if (sessions.TryGetValue(id, out var _))
+            {
+                return;
             }
 
             sessions.TryAdd(id, session);
@@ -51,6 +53,41 @@ namespace AOT.Framework.Network
             //根据网络地址以及端口计算唯一int值
             return CalculateUniqueInt(endPoint);
         }
+        
+        #endregion
+
+        #region Avatar
+
+        public void AddAvatar(int id, Avatar avatar)
+        {
+            if (avatar == null)
+            {
+                throw  new ArgumentNullException($"Avatar is invalid");
+            }
+            if (avatars.TryGetValue(id, out var _))
+            {
+                avatars[id] = avatar;
+            }
+            
+            avatars.TryAdd(id, avatar);
+        }
+
+        public void RemoveAvatar(int id)
+        {
+            avatars.TryRemove(id, out var _);
+        }
+
+        public Avatar GetAvatar(int id)
+        {
+            if (avatars.TryGetValue(id, out var avatar))
+            {
+                return avatar;
+            }
+
+            return null;
+        }
+
+        #endregion
         
         /// <summary>
         /// 根据 IPEndPoint 计算一个唯一的整数值。

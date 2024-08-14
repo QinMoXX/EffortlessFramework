@@ -70,6 +70,11 @@ namespace AOT.Framework.Network
             kcp.Send(datagram.AsSpan().Slice(0, datagram.Length));
         }
 
+        public string GetToken()
+        {
+            return m_sessionId.ToString();
+        }
+
         public async UniTask SendAsync(byte[] datagram)
         {
             kcp.Send(datagram.AsSpan().Slice(0, datagram.Length));
