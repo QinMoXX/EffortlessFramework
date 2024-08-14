@@ -4,5 +4,6 @@ namespace HotUpdate.UI.View
     {
         LoginUI = 1,
         SettingUI = 2,
+        MenuUI = 3,
     }
 }
