@@ -6,7 +6,6 @@ using AOT.UI;
 using AOT.UI.AOT.UI;
 using HotUpdate.Controller;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace HotUpdate.UI
@@ -39,9 +38,6 @@ namespace HotUpdate.UI
             GameEntry.GetModule<AudioManager>().PlayAudio("DM-CGS-01","UI");
             
         }
-
-        private Guid audioId;
-        private bool isPlaying;
         private void OnClickStart()
         {
             GameEntry.GetModule<AudioManager>().PlayAudio("DM-CGS-01","UI");
