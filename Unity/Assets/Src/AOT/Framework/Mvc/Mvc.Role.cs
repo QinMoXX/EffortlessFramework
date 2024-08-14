@@ -5,7 +5,7 @@ namespace AOT.Framework.Mvc
         public void Init();
     }
 
-    public interface IView:IEventReceiver,IControllerGetter
+    public interface IView:IEventReceiver,IControllerGetter,IModelGetter
     {
         public void Init();
     }

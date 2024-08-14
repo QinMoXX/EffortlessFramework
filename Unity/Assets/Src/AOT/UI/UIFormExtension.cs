@@ -14,10 +14,10 @@ namespace AOT.UI
             /// </summary>
             /// <param name="self">界面<see cref="UIForm"/></param>
             /// <param name="path">路径字符串</param>
-            /// <typeparam name="T">UGUI组件类型<see cref="UIBehaviour"/>></typeparam>
+            /// <typeparam name="T">UGUI组件类型<see cref="MonoBehaviour"/>></typeparam>
             /// <returns></returns>
             /// <exception cref="UIException"></exception>
-            public static T GetControl<T>(this UIForm self,string path)where T:UIBehaviour{
+            public static T GetControl<T>(this UIForm self,string path){
                 if (self.Handel == null)
                 {
                     throw new GameFrameworkException("UIForm intstance object does not exist❗");
